@@ -10904,7 +10904,9 @@ textarea.form-control-lg {
 #toggle_button1, #toggle_contents1,
 #toggle_button2, #toggle_contents2,
 #toggle_button3, #toggle_contents3,
-#toggle_button4, #toggle_contents4 {
+#toggle_button4, #toggle_contents4,
+#toggle_button5, #toggle_contents5,
+#toggle_button6, #toggle_contents6 {
   height:0;
   overflow:hidden;
   position:absolute;
@@ -10913,7 +10915,9 @@ textarea.form-control-lg {
 #toggle_button1:checked + #toggle_contents1,
 #toggle_button2:checked + #toggle_contents2,
 #toggle_button3:checked + #toggle_contents3,
-#toggle_button4:checked + #toggle_contents4 {
+#toggle_button4:checked + #toggle_contents4,
+#toggle_button5:checked + #toggle_contents5,
+#toggle_button6:checked + #toggle_contents6 {
   height: auto;
   position: relative;
   border: 1px solid #ccc;

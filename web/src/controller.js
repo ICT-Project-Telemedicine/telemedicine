@@ -59,16 +59,18 @@ exports.index = async function (req, res) {
             logger.info(`Error Login - non valid patient code`);
             return res.redirect('/');
         }
-        // 임시로 환자 인덱스 설정, DB 연결되면 조회
-        userIndex = 117;
+        //userIndex = 117;
+        userIndex = await dao.getUserIndex(parseInt(code, 10), 0);
+
     } else if (identity === 'doctor') {
         // 지금 의사는 222, 이후에 DB 연결하면 조회하는 걸로 수정
         if (parseInt(code, 10) !== 222) {
             logger.info(`Error Login - non valid doctor code`);
             return res.redirect('/');
         }
-        // 임시로 의사 인덱스 설정, DB 연결되면 조회
-        userIndex = 319;
+        //userIndex = 319;
+        userIndex = await dao.getUserIndex(parseInt(code, 10), 1);
+
     } else {
         logger.info(`Error Login - non valid quert string`);
         return res.redirect('/');
@@ -133,6 +135,7 @@ exports.doctor = async function (req, res) {
     const doctorIdx = parseInt(req.params.doctorIdx, 10);
     const authUser = parseInt(req.verifiedToken.id, 10);
     const patientIdx = parseInt(req.query.patient, 10);
+    const rows = await dao.getDoctorInfo(doctorIdx);
 
     // 잘못된 접근 - 의사 인덱스와 토큰의 인덱스가 다를 때
     if (doctorIdx !== authUser) {
@@ -141,22 +144,14 @@ exports.doctor = async function (req, res) {
     }
 
     if (!patientIdx) {
-        // 의사에게 할당된 환자 리스트 조회(DB 조회)
-        const patientList = [
-            {
-                userIndex: 1,
-                name: '김희동'
-            },
-            {
-                userIndex: 2,
-                name: '내일의 김희동'
-            },
-            {
-                userIndex: 3,
-                name: '모레의 김희동'
-            }
-        ];
-        return res.render('patient-list.ejs', {'doctorIdx': doctorIdx, 'patients': patientList});
+        const doctorName = rows.name;
+        const patientIdxList = rows.patientIndex.split(',')
+        const patientNameList = rows.patientName.split(',');
+        var patientList = [];
+        for (var i = 0; i < patientIdxList.length; i++) {
+            patientList.push({userIndex: patientIdxList[i], name: patientNameList[i]})
+        };
+        return res.render('patient-list.ejs', {'doctorIdx': doctorIdx, 'doctorName': doctorName, 'patients': patientList});
     } else {
         // 환자 인덱스 DB에서 조회
         const patientIndexList = [1, 2, 3];
