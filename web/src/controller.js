@@ -102,9 +102,14 @@ exports.logout = async function (req, res) {
 exports.patient = async function (req, res) {
     const patientIdx = parseInt(req.params.patientIdx, 10);
     const authUser = parseInt(req.verifiedToken.id, 10);
-    const heartRate = 68; // 심박동수 예시
-    const temperature = 36.5; // 체온 예시
-    const oxygen = 98; // 산소포화도 예시 
+
+    // 최근 5일간 심박동수 & 체온 & 산소포화도 (추후 DynamoDB에서 불러올 것)
+    const heartRate = [68, 70, 65, 73, 64];
+    const temperature = [36.5, 35.7, 36.0, 37.1, 36.7];
+    const oxygen = [98, 99, 93, 95, 96];
+    const date = [];
+
+    const patientName = await dao.getPatientInfo(patientIdx);
 
     // 잘못된 접근 - 환자 인덱스와 토큰의 인덱스가 다를 때
     if (patientIdx !== authUser) {
@@ -112,11 +117,12 @@ exports.patient = async function (req, res) {
         return res.redirect('/');
     }
 
-    return res.render('clinic.ejs', {patientIdx, heartRate, temperature, oxygen});
+    return res.render('patient.ejs', {patientIdx, patientName, heartRate, temperature, oxygen});
 };
 
 exports.patientMonitor = async function (req, res) {
     const patientIdx = parseInt(req.params.patientIdx, 10);
+    const patientName = await dao.getPatientInfo(patientIdx);
     const authUser = parseInt(req.verifiedToken.id, 10);
     const heartRate = 68; // 심박동수 예시
     const temperature = 36.5; // 체온 예시
@@ -128,7 +134,8 @@ exports.patientMonitor = async function (req, res) {
         return res.redirect('/');
     }
 
-    return res.render('patientMonitor.ejs', {heartRate, temperature, oxygen});
+
+    return res.render('patientMonitor.ejs', {patientName, heartRate, temperature, oxygen});
 }
 
 exports.doctor = async function (req, res) {
@@ -151,7 +158,7 @@ exports.doctor = async function (req, res) {
         for (var i = 0; i < patientIdxList.length; i++) {
             patientList.push({userIndex: patientIdxList[i], name: patientNameList[i]})
         };
-        return res.render('patient-list.ejs', {'doctorIdx': doctorIdx, 'doctorName': doctorName, 'patients': patientList});
+        return res.render('doctor.ejs', {'doctorIdx': doctorIdx, 'doctorName': doctorName, 'patients': patientList});
     } else {
         // 환자 인덱스 DB에서 조회
         const patientIndexList = [1, 2, 3];
@@ -167,7 +174,7 @@ exports.doctor = async function (req, res) {
                 'name': '김희동'
             };
 
-            return res.render('patient-detail.ejs', {'doctorIdx': doctorIdx, 'patientInfo': patientInfo});
+            return res.render('doctorMonitor.ejs', {'doctorIdx': doctorIdx, 'patientInfo': patientInfo});
         }
     }
 }

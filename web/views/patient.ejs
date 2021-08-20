@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>원격 진료 시스템</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link rel="stylesheet" href="/css/style.css" type="text/css">
+        <link rel="stylesheet" href="/css/canvas.css" type="text/css">
+        <!-- Graph -->
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/series-label.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+        <script src="https://code.highcharts.com/themes/high-contrast-light.js"></script>
+    </head>
+    <body>
+        <!-- Responsive navbar-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="">원격 진료 시스템</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="/logout">로그아웃</a></li>
+                        <li class="nav-item"><a class="nav-link" href="">서비스 소개</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Header - set the background image for the header in the line below-->
+        <header class="py-5 bg-image-full">
+            <div class="text-center my-5">
+                <img class="img-fluid rounded-circle mb-4" src="/img/patient.png" alt="..." />
+                <h1 class="text-black fs-3 fw-bolder">환자 <%= patientName %> 님</h1>
+                <p class="text-black-50 mb-0">반갑습니다. 나의 건강 상태를 확인하고 모니터링을 진행해보세요.</p>
+            </div>
+        </header>
+        <!-- Content section-->
+        <section class="py-5">
+            <div class="container my-5">
+
+                <div class="col-lg-9">
+                    <h2 class="title">나의 건강 상태 확인</h2>
+                    <p class="lead">센서를 통해 수집한 나의 건강 상태를 확인하세요.</p>
+
+                    <div class="medical-data">
+
+                        <label for="toggle_button1" class="toggle_button"><h4>심박동수</h4></label>
+                        <input type="checkbox" id="toggle_button1">
+                        <div id="toggle_contents1">
+                            <figure class="highcharts-figure">
+                                <div id="graph-container"></div>
+                                <script>
+                                    var colors = Highcharts.getOptions().colors;
+                                    const rateList = '<%= heartRate %>'.split(',').map(Number);
+                                    Highcharts.chart('graph-container', {
+                                        chart: {type: 'spline'},
+                                        legend: {symbolWidth: 40},
+                                        title: {text: '심박동수'},
+                                        subtitle: {text: '최근 5일간의 평균 심박동수 변화'},
+                                        yAxis: {
+                                            title: {text: 'BPM'},
+                                            accessibility: {description: 'Percentage usage'}
+                                        },
+                                        xAxis: {
+                                            categories: ['날짜 1', '날짜 2', '날짜 3', '날짜 4', '날짜 5']
+                                        },
+                                        tooltip: {valueSuffix: 'BPM'},
+                                        series: [{
+                                            name: '<%= patientName %> 님',
+                                            data: rateList,
+                                            color: colors[3]
+                                        }]
+                                    });
+                                </script>
+                            </figure>    
+                            <!-- <div class="cardData">
+                                <img class="icon" src="/img/heartRate.png" alt="..." />
+                                <span class="heartRate"> <%= heartRate %> </span>
+                                <span class="unit">BPM</span>
+                            </div>
+                            <div class="explanation">심박동수란 ~ </div> -->
+                        </div>
+        
+                        <label for="toggle_button2" class="toggle_button"><h4>체온</h4></label>
+                        <input type="checkbox" id="toggle_button2">
+                        <div id="toggle_contents2">
+                            <figure class="highcharts-figure">
+                                <div id="graph-container2"></div>
+                                <script>
+                                    var colors = Highcharts.getOptions().colors;
+                                    const rateList2 = '<%= temperature %>'.split(',').map(Number);
+                                    Highcharts.chart('graph-container2', {
+                                        chart: {type: 'spline'},
+                                        legend: {symbolWidth: 40},
+                                        title: {text: '체온'},
+                                        subtitle: {text: '최근 5일간의 체온 변화'},
+                                        yAxis: {
+                                            title: {text: '°C'},
+                                            accessibility: {description: 'Percentage usage'}
+                                        },
+                                        xAxis: {
+                                            categories: ['날짜 1', '날짜 2', '날짜 3', '날짜 4', '날짜 5']
+                                        },
+                                        tooltip: {valueSuffix: '°C'},
+                                        series: [{
+                                            name: '<%= patientName %> 님',
+                                            data: rateList2,
+                                            color: colors[6]
+                                        }]
+                                    });
+                                </script>
+                            </figure>
+                            <!-- <div class="cardData">
+                                <img class="icon" src="/img/temp.png" alt="..." />
+                                <span class="temperature"> <%= temperature %> </span>
+                                <span class="unit">°C</span>                         
+                            </div>
+                            <div class="explanation">체온이란 ~ </div> -->
+                        </div>
+        
+                        <label for="toggle_button3" class="toggle_button"><h4>산소포화도</h4></label>
+                        <input type="checkbox" id="toggle_button3">
+                        <div id="toggle_contents3">
+                            <figure class="highcharts-figure">
+                                <div id="graph-container3"></div>
+                                <script>
+                                    var colors = Highcharts.getOptions().colors;
+                                    const rateList3 = '<%= oxygen %>'.split(',').map(Number);
+                                    Highcharts.chart('graph-container3', {
+                                        chart: {type: 'spline'},
+                                        legend: {symbolWidth: 40},
+                                        title: {text: '체온'},
+                                        subtitle: {text: '최근 5일간의 혈중 산소포화도 변화'},
+                                        yAxis: {
+                                            title: {text: '%'},
+                                            accessibility: {description: 'Percentage usage'}
+                                        },
+                                        xAxis: {
+                                            categories: ['날짜 1', '날짜 2', '날짜 3', '날짜 4', '날짜 5']
+                                        },
+                                        tooltip: {valueSuffix: '%'},
+                                        series: [{
+                                            name: '<%= patientName %> 님',
+                                            data: rateList3,
+                                            color: colors[8]
+                                        }]
+                                    });
+                                </script>
+                            </figure>
+                            <!-- <div class="cardData">
+                                <img class="icon" src="/img/oxygen.png" alt="..." />
+                                <span class="oxygen"> <%= oxygen %> </span>
+                                <span class="unit">%</span>                         
+                            </div>
+                            <div class="explanation">산소포화도란 ~ </div> -->
+                        </div>
+
+                        <label for="toggle_button4" class="toggle_button"><h4>심전도</h4></label>
+                        <input type="checkbox" id="toggle_button4">
+                        <div id="toggle_contents4">
+                            준비 중입니다!
+                            <!-- <div class="cardData">
+                                <span class="electrocardiogram"> ? </span>                    
+                            </div>
+                            <div class="explanation">심전도란 ~ </div> -->
+                        </div>
+                    </div>
+
+                    <br><br>
+
+                    <h2 class="title">의사 모니터링</h2>
+                    <p class="lead">담당 의사와의 모니터링을 통해 상태를 공유하세요.</p>
+
+                    <div class="monitor" onclick="goMonitor(<%= patientIdx %>)">모니터링 하러가기</div>
+
+                    <script>
+                        goMonitor = (idx) => { location.href=`/patient/<%=patientIdx%>/monitor`; }
+                    </script>
+                </div>
+            </div>
+
+
+
+        </section>
+
+
+
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+        <!-- ECT Pulse Graph -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
+    </body>
+</html>

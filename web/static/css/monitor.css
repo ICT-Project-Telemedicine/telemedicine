@@ -1,0 +1,68 @@
+/* body {
+    background-color: rgba(34, 34, 34);
+    color: white;
+} */
+
+.user1Video {
+    display: block;
+    overflow: hidden;
+    height: 600px;
+    width: 1080px;
+    padding-left: 215px;
+}
+
+/* 나중에 img => video 수정 */
+
+.user1Video img {
+    display: block;
+    min-width: 100%;
+    min-height: 100%;
+    -ms-interpolation-mode: bicubic;
+}
+
+.user2Video {
+    display: block;
+    overflow: hidden;
+    height: 150px;
+    width: 270px;
+}
+
+.user2Video img {
+    display: block;
+    min-width: 100%;
+    min-height: 100%;
+    -ms-interpolation-mode: bicubic;
+}
+
+.inner {
+    position: absolute;
+    bottom: 10px;
+    right: 227px;
+}
+/* .grid {
+    width: 100%;
+    display: grid;
+    grid-template-areas: "header header header" "user1Video user1Video patientData" "user1Video user1Video user2Video";
+    gap: 10px;
+} */
+
+/* .grid {
+    width: 100%;
+    display: grid;
+    grid-template-areas: "header header header" "user1Video user1Video patientData" "user1Video user1Video user2Video";
+    gap: 10px;
+} */
+
+.grid .header {grid-area: header;}
+.grid .patientData {grid-area: patientData;}
+.grid .user2Video{grid-area: user2Video;}
+.grid .user1Video{grid-area: user1Video;}
+
+.patientData {
+    text-align: center;
+}
+
+.totalData {
+    text-align: center;
+    font-size: 1rem;
+}

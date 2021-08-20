@@ -11,6 +11,7 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link rel="stylesheet" href="/css/style.css" type="text/css">
         <link rel="stylesheet" href="/css/canvas.css" type="text/css">
+        <link rel="stylesheet" href="/css/monitor.css" type="text/css">
     </head>
     <body>
         <!-- Responsive navbar-->
@@ -30,28 +31,110 @@
         <section class="py-5">
             <div class="container my-5">
 
-                <div class="col-lg-9">
-                    <h2 class="title">의사 모니터링</h2>
-                    <p class="lead">담당 의사와의 모니터링을 통해 상태를 공유하세요.</p>
+                <h2 class="title">의사 모니터링</h2>
+                        <p class="lead">담당 의사와의 모니터링을 통해 상태를 공유하세요.</p>
 
-                    <div class="wrapper">
-                        <div class="patientVideo">
-                            <video id="vp" class="video-player" controls preload="none" data-setup='{ "aspectRatio":"640:300", "playbackRates": [1, 1.5, 2] }' loop="" autoplay="" muted="">
-                                <source src="http://ruthetum.cafe24.com/sample/video/1.mp4" type='video/mp4'/>
-                            </video>
+                <div class="outer" style="position: relative;">
+                    <div class="item user1Video">
+                        <img src="https://i.pinimg.com/originals/e6/d2/27/e6d22708bcabc0b47b837a5da9794df0.gif">
+                    </div>
+                    <div class="inner">
+                        <div class="item user2Video">
+                            <img src="https://i.pinimg.com/originals/43/3d/83/433d83f7e481f35245f8c6bb7c7591d8.gif">
                         </div>
-                        <div class="DoctorVideo">
-                            <video id="vp" class="video-player" controls preload="none" data-setup='{ "aspectRatio":"640:300", "playbackRates": [1, 1.5, 2] }' loop="" autoplay="" muted="">
-                                <source src="http://ruthetum.cafe24.com/sample/video/1.mp4" type='video/mp4'/>
-                            </video>
-                        </div>
-                        <div class="um">3</div>
-                        <div class="um">4</div>
-                        <div class="um">5</div>
-                        <div class="um">6</div>
-                    </div>                    
+                    </div>
                 </div>
 
+                <div>
+                    <table class="patientTable" style="width: 70%; margin-left: 15%;">
+                        <tr>
+                            <td colspan = "2" span style = "background-color: #212529; color: white"><%= patientName %> 환자</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #ccc">심박동수</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #ccc">체온</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #ccc">산소포화도</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="background-color: #ccc">심전도</td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                    <p class="totalData">전체 기록 조회하기</p>
+                </div>
+                
+
+
+                <!-- <div class="grid">
+                    <header class="item header">
+                        <h2 class="title">의사 모니터링</h2>
+                        <p class="lead">담당 의사와의 모니터링을 통해 상태를 공유하세요.</p>
+                    </header>
+                    <div class="item user1Video">
+                        <img src="https://i.pinimg.com/originals/e6/d2/27/e6d22708bcabc0b47b837a5da9794df0.gif">
+                    </div>
+                    <div class="item patientData">
+                        <table class="patientTable"">
+                            <tr>
+                                <td colspan = "2" span style = "background-color: #212529; color: white"><%= patientName %> 환자</td>
+                            </tr>
+                            <tr>
+                                <td style="background-color: #ccc">심박동수</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td style="background-color: #ccc">체온</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td style="background-color: #ccc">산소포화도</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td style="background-color: #ccc">심전도</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td colspan = "2" span class="totalData">전체 기록 조회하기</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="item user2Video">
+                        <img src="https://i.pinimg.com/originals/e6/d2/27/e6d22708bcabc0b47b837a5da9794df0.gif">
+                    </div>
+                </div> -->
+
+
+                <!-- <div class="wrapper">
+                    <div class="user1Video">
+                        <img src="https://i.pinimg.com/originals/e6/d2/27/e6d22708bcabc0b47b837a5da9794df0.gif">
+                    </div>
+                    <div class="user2Video">
+                        <img src="https://i.gifer.com/24OD.gif">
+                    </div>
+
+                    <!-- <div class="patientVideo">
+                        <video id="vp" class="video-player" controls preload="none" data-setup='{ "aspectRatio":"640:300", "playbackRates": [1, 1.5, 2] }' loop="" autoplay="" muted="">
+                            <source src="http://ruthetum.cafe24.com/sample/video/1.mp4" type='video/mp4'/>
+                        </video>
+                    </div>
+                    <div class="DoctorVideo">
+                        <video id="vp" class="video-player" controls preload="none" data-setup='{ "aspectRatio":"640:300", "playbackRates": [1, 1.5, 2] }' loop="" autoplay="" muted="">
+                            <source src="http://ruthetum.cafe24.com/sample/video/1.mp4" type='video/mp4'/>
+                        </video>
+                    </div>
+                    <div class="um">3</div>
+                    <div class="um">4</div>
+                    <div class="um">5</div>
+                    <div class="um">6</div> -->
+                </div>
             </div>
         </section>
         <!-- Bootstrap core JS-->
