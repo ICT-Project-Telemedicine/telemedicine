@@ -10,6 +10,13 @@
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link rel="stylesheet" href="/css/style.css" type="text/css">
+        <!-- Graph -->
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/series-label.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+        <script src="https://code.highcharts.com/themes/high-contrast-light.js"></script>
     </head>
     <body>
         <!-- Responsive navbar-->
@@ -40,11 +47,92 @@
                         <h2 class="title">담당 환자 목록</h2>
                         <p class="lead">담당 환자와의 모니터링을 통해 상태를 확인하세요.</p>
                         
-                        <% patients.forEach(element => { %>
+                        <% patientList.forEach(element => { %>
                             <label for="toggle_button<%= element.userIndex %>" class="toggle_button"><h4><%= element.name %></h4></label>
                             <input type="checkbox" id="toggle_button<%= element.userIndex %>">
                             <div id="toggle_contents<%= element.userIndex %>">
-                               <table class="patientTable"">
+                                <figure class="highcharts-figure">
+                                    <div id="graph-container <%= element.name %>"></div>
+                                    <script>
+                                        var colors = Highcharts.getOptions().colors;
+                                        var rateList = '<%= heartRate %>'.split(',').map(Number);
+                                        Highcharts.chart('graph-container <%= element.name %>', {
+                                            chart: {type: 'spline'},
+                                            legend: {symbolWidth: 40},
+                                            title: {text: '심박동수'},
+                                            subtitle: {text: '최근 5일간의 평균 심박동수 변화'},
+                                            yAxis: {
+                                                title: {text: 'BPM'},
+                                                accessibility: {description: 'Percentage usage'}
+                                            },
+                                            xAxis: {
+                                                categories: ['날짜 1', '날짜 2', '날짜 3', '날짜 4', '날짜 5']
+                                            },
+                                            tooltip: {valueSuffix: 'BPM'},
+                                            series: [{
+                                                name: '<%= element.name %> 님',
+                                                data: rateList,
+                                                color: colors[3]
+                                            }]
+                                        });
+                                    </script>
+                                </figure>
+                                
+                                <figure class="highcharts-figure">
+                                    <div id="graph-container2 <%= element.name %>"></div>
+                                    <script>
+                                        var colors = Highcharts.getOptions().colors;
+                                        var rateList2 = '<%= temperature %>'.split(',').map(Number);
+                                        Highcharts.chart('graph-container2 <%= element.name %>', {
+                                            chart: {type: 'spline'},
+                                            legend: {symbolWidth: 40},
+                                            title: {text: '체온'},
+                                            subtitle: {text: '최근 5일간의 체온 변화'},
+                                            yAxis: {
+                                                title: {text: '°C'},
+                                                accessibility: {description: 'Percentage usage'}
+                                            },
+                                            xAxis: {
+                                                categories: ['날짜 1', '날짜 2', '날짜 3', '날짜 4', '날짜 5']
+                                            },
+                                            tooltip: {valueSuffix: '°C'},
+                                            series: [{
+                                                name: '<%= element.name %> 님',
+                                                data: rateList2,
+                                                color: colors[6]
+                                            }]
+                                        });
+                                    </script>
+                                </figure>
+
+                                <figure class="highcharts-figure">
+                                    <div id="graph-container3 <%= element.name %>"></div>
+                                    <script>
+                                        var colors = Highcharts.getOptions().colors;
+                                        var rateList3 = '<%= oxygen %>'.split(',').map(Number);
+                                        Highcharts.chart('graph-container3 <%= element.name %>', {
+                                            chart: {type: 'spline'},
+                                            legend: {symbolWidth: 40},
+                                            title: {text: '산소포화도'},
+                                            subtitle: {text: '최근 5일간의 혈중 산소포화도 변화'},
+                                            yAxis: {
+                                                title: {text: '%'},
+                                                accessibility: {description: 'Percentage usage'}
+                                            },
+                                            xAxis: {
+                                                categories: ['날짜 1', '날짜 2', '날짜 3', '날짜 4', '날짜 5']
+                                            },
+                                            tooltip: {valueSuffix: '%'},
+                                            series: [{
+                                                name: '<%= element.name %> 님',
+                                                data: rateList3,
+                                                color: colors[8]
+                                            }]
+                                        });
+                                    </script>
+                                </figure>
+
+                               <!-- <table class="patientTable"">
                                     <tr>
                                         <td style="background-color: #ccc">심박동수</td>
                                         <td>-</td>
@@ -61,7 +149,7 @@
                                         <td style="background-color: #ccc">심전도</td>
                                         <td>-</td>
                                     </tr>
-                                </table>
+                                </table> -->
                                 <div class="patientMonitor" onclick="patientDetail(<%= element.userIndex %>)"><b><%= element.name %> 환자</b> 모니터링 하러가기</div>
                             </div>
                         <% }); %>

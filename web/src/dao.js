@@ -37,10 +37,26 @@ exports.getUserIndex = async (id, info) => {
     return rows[0].userIndex
 }
 
-exports.getPatientInfo = async (idx) => {
+exports.getPatientName = async (idx) => {
     const connection = await pool.getConnection(async (conn) => conn);
-    const getPatientInfoQuery = `SELECT name FROM user WHERE userIndex = ${idx}`;
-    const [rows] = await connection.query(getPatientInfoQuery);
+    const getPatientNameQuery = `SELECT name FROM user WHERE userIndex = ${idx}`;
+    const [rows] = await connection.query(getPatientNameQuery);
+    connection.release();
+    return rows[0].name;
+}
+
+exports.getPatientBasicInfo = async (idx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const getPatientBasicInfoQuery = `SELECT sex, age, height, weight, BMI FROM patient WHERE patientIndex = ${idx};`;
+    const [rows] = await connection.query(getPatientBasicInfoQuery);
+    connection.release();
+    return rows;
+}
+
+exports.getPatientMeasureInfo = async (idx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const getPatientMeasureInfoQuery = `SELECT name FROM user WHERE userIndex = ${idx}`;
+    const [rows] = await connection.query(getPatientMeasureInfoQuery);
     connection.release();
     
     // 현재 unix timestamp 구하기 (DynamoDB 데이터 조회 목적)
