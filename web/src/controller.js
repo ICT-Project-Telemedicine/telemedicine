@@ -88,7 +88,7 @@ exports.index = async function (req, res) {
     );
 
     res.cookie('token', token);
-    return res.redirect(`/${identity}/${userIndex}`);
+    return res.redirect(`/${identity}`);
 };
 
 /**
@@ -100,8 +100,7 @@ exports.logout = async function (req, res) {
 }
 
 exports.patient = async function (req, res) {
-    const patientIdx = parseInt(req.params.patientIdx, 10);
-    const authUser = parseInt(req.verifiedToken.id, 10);
+    const patientIdx = req.verifiedToken.id;
 
     // 최근 5일간 심박동수 & 체온 & 산소포화도 (추후 DynamoDB에서 불러올 것)
     const heartRate = [68, 70, 65, 73, 64];
@@ -111,73 +110,62 @@ exports.patient = async function (req, res) {
 
     const patientName = await dao.getPatientName(patientIdx);
 
-    // 잘못된 접근 - 환자 인덱스와 토큰의 인덱스가 다를 때
-    if (patientIdx !== authUser) {
-        logger.info(`Error Patient - patientIdx and token.id are different`);
-        return res.redirect('/');
-    }
-
     return res.render('patient.ejs', {patientIdx, patientName, heartRate, temperature, oxygen});
 };
 
 exports.patientMonitor = async function (req, res) {
-    const patientIdx = parseInt(req.params.patientIdx, 10);
-    const patientName = await dao.getPatientMeasureInfo(patientIdx);
-    const authUser = parseInt(req.verifiedToken.id, 10);
+    const patientIdx = req.verifiedToken.id;
+    const patientName = await dao.getPatientName(patientIdx);
+
     const heartRate = 68; // 심박동수 예시
     const temperature = 36.5; // 체온 예시
     const oxygen = 98; // 산소포화도 예시 
-
-    // 잘못된 접근 - 환자 인덱스와 토큰의 인덱스가 다를 때
-    if (patientIdx !== authUser) {
-        logger.info(`Error Patient - patientIdx and token.id are different`);
-        return res.redirect('/');
-    }
-
 
     return res.render('patientMonitor.ejs', {patientName, heartRate, temperature, oxygen});
 }
 
 exports.doctor = async function (req, res) {
-    const doctorIdx = parseInt(req.params.doctorIdx, 10);
-    const authUser = parseInt(req.verifiedToken.id, 10);
+    const doctorIdx = req.verifiedToken.id;
     const patientIdx = parseInt(req.query.patient, 10);
     const rows = await dao.getDoctorInfo(doctorIdx);
 
     // 최근 5일간 심박동수 & 체온 & 산소포화도 (추후 DynamoDB에서 불러올 것)
-    const heartRate = [68, 70, 65, 73, 64];
-    const temperature = [36.5, 35.7, 36.0, 37.1, 36.7];
-    const oxygen = [98, 99, 93, 95, 96];
+    let heartRate = [68, 70, 65, 73, 64];
+    let temperature = [36.5, 35.7, 36.0, 37.1, 36.7];
+    let oxygen = [98, 99, 93, 95, 96];
     const date = [];
 
-    // 잘못된 접근 - 의사 인덱스와 토큰의 인덱스가 다를 때
-    if (doctorIdx !== authUser) {
-        logger.info(`Error Doctor - doctorIdx and token.id are different`);
-        return res.redirect('/');
-    }
-
     if (!patientIdx) {
+        // 전체 환자
         const doctorName = rows.name;
         const patientIdxList = rows.patientIndex.split(',')
         const patientNameList = rows.patientName.split(',');
-        var patientList = [];
-        for (var i = 0; i < patientIdxList.length; i++) {
-            patientList.push({userIndex: patientIdxList[i], name: patientNameList[i]})
+        let patientList = [];
+        for (let i = 0; i < patientIdxList.length; i++) {
+            const userIndex = patientIdxList[i];
+            const name = patientNameList[i];
+
+            // dynamo 조회
+            if (userIndex == 1) {
+                const patientMeasureInfo = await dao.getPatientMeasureInfo(userIndex);
+                console.log(patientMeasureInfo)
+            }
+
+            patientList.push({userIndex, name});
         };
 
         return res.render('doctor.ejs', {doctorIdx, doctorName, patientList, heartRate, temperature, oxygen});
-    }
-    else {
+    } else {
+        // 특정 환자
         // 환자 인덱스 DB에서 조회
-        const patientIndexList = [1, 2, 3];
-        const patientSet = new Set(patientIndexList);
+        const patientIdxList = rows.patientIndex.split(',');
+        const patientIdxSet = new Set(patientIdxList);
 
         // 리스트에 없는 경우 
-        if (!patientSet.has(patientIdx)) {
-            return res.redirect(`/doctor/${doctorIdx}`);
-        }
-        // 리스트에 있는 경우
-        else {
+        if (!patientIdxSet.has(patientIdx)) {
+            return res.redirect('/doctor');
+        }  else {
+            // 리스트에 있는 경우
             // 환자 기본 정보 (성별, 나이, 키, 몸무게, BMI)
             const rows = await dao.getPatientBasicInfo(patientIdx);
             const patientName = await dao.getPatientName(patientIdx);
