@@ -101,6 +101,7 @@ exports.logout = async function (req, res) {
 
 exports.patient = async function (req, res) {
     const patientIdx = req.verifiedToken.id;
+    const patientName = await dao.getPatientName(patientIdx);
 
     // 최근 5일간 심박동수 & 체온 & 산소포화도 (추후 DynamoDB에서 불러올 것)
     const heartRate = [68, 70, 65, 73, 64];
@@ -108,9 +109,36 @@ exports.patient = async function (req, res) {
     const oxygen = [98, 99, 93, 95, 96];
     const date = [];
 
-    const patientName = await dao.getPatientName(patientIdx);
+    // dynamo 조회
+    const patientMeasureInfo = await dao.getPatientMeasureInfo(patientIdx);
 
-    return res.render('patient.ejs', {patientIdx, patientName, heartRate, temperature, oxygen});
+    let measurement = {};
+    let heartRatee = [];
+    let temperaturee = [];
+    let oxygene = [];
+    let datee = [];
+
+    if (patientMeasureInfo.length >= 5) {
+        patientMeasureInfo.forEach((e) => {
+            let changeDate = new Date(Number(e.timestamp));
+            let year = changeDate.getFullYear();
+            let month = ('0' + (changeDate.getMonth() + 1)).slice(-2);
+            let day = ('0' + changeDate.getDate()).slice(-2);
+            let currDate = year + '-' + month + '-' + day;
+
+            heartRatee.push(e.payload.bpm);
+            temperaturee.push(e.payload.temperature);
+            oxygene.push(e.payload.spo2);
+            datee.push(currDate);
+        });                
+        measurement = {
+            heartRate: heartRatee,
+            temperature: temperaturee,
+            oxygen: oxygene,
+            date: datee
+        }
+    }
+    return res.render('patient.ejs', {patientIdx, patientName, measurement, heartRate, temperature, oxygen});
 };
 
 exports.patientMonitor = async function (req, res) {
@@ -129,12 +157,6 @@ exports.doctor = async function (req, res) {
     const patientIdx = parseInt(req.query.patient, 10);
     const rows = await dao.getDoctorInfo(doctorIdx);
 
-    // 최근 5일간 심박동수 & 체온 & 산소포화도 (추후 DynamoDB에서 불러올 것)
-    let heartRate = [68, 70, 65, 73, 64];
-    let temperature = [36.5, 35.7, 36.0, 37.1, 36.7];
-    let oxygen = [98, 99, 93, 95, 96];
-    const date = [];
-
     if (!patientIdx) {
         // 전체 환자
         const doctorName = rows.name;
@@ -146,15 +168,38 @@ exports.doctor = async function (req, res) {
             const name = patientNameList[i];
 
             // dynamo 조회
-            if (userIndex == 1) {
-                const patientMeasureInfo = await dao.getPatientMeasureInfo(userIndex);
-                console.log(patientMeasureInfo)
-            }
+            const patientMeasureInfo = await dao.getPatientMeasureInfo(userIndex);
 
-            patientList.push({userIndex, name});
+            let measurement = {};
+            let heartRate = [];
+            let temperature = [];
+            let oxygen = [];
+            let date = [];
+
+            if (patientMeasureInfo.length >= 5) {
+                patientMeasureInfo.forEach((e) => {
+                    let changeDate = new Date(Number(e.timestamp));
+                    let year = changeDate.getFullYear();
+                    let month = ('0' + (changeDate.getMonth() + 1)).slice(-2);
+                    let day = ('0' + changeDate.getDate()).slice(-2);
+                    let currDate = year + '-' + month + '-' + day;
+
+                    heartRate.push(e.payload.bpm);
+                    temperature.push(e.payload.temperature);
+                    oxygen.push(e.payload.spo2);
+                    date.push(currDate);
+                });                
+                measurement = {
+                    heartRate: heartRate,
+                    temperature: temperature,
+                    oxygen: oxygen,
+                    date: date
+                }
+            };
+            patientList.push({userIndex, name, measurement});
         };
 
-        return res.render('doctor.ejs', {doctorIdx, doctorName, patientList, heartRate, temperature, oxygen});
+        return res.render('doctor.ejs', {doctorIdx, doctorName, patientList});
     } else {
         // 특정 환자
         // 환자 인덱스 DB에서 조회
@@ -170,6 +215,7 @@ exports.doctor = async function (req, res) {
             const rows = await dao.getPatientBasicInfo(patientIdx);
             const patientName = await dao.getPatientName(patientIdx);
 
+            // 환자 기본 정보
             const patientBasicInfo = {
                 'patientIdx': patientIdx,
                 'name': patientName,
@@ -180,13 +226,7 @@ exports.doctor = async function (req, res) {
                 'BMI': rows[0].BMI
             }
 
-            // 환자 정보 조회
-            const patientInfo = {
-                'userIndex': 1,
-                'name': '김희동'
-            };
-
-            return res.render('doctorMonitor.ejs', {doctorIdx, patientBasicInfo, patientInfo});
+            return res.render('doctorMonitor.ejs', {doctorIdx, patientBasicInfo});
         }
     }
 }

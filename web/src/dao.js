@@ -61,7 +61,7 @@ exports.getPatientMeasureInfo = async (idx) => {
 
     const params = {
         TableName: dynamo_config.table_name,
-        ProjectionExpression: "userIndex, payload, #timestamp",
+        ProjectionExpression: "payload, #timestamp",
         ExpressionAttributeNames: {
             "#timestamp": "timestamp"
         },
@@ -76,56 +76,6 @@ exports.getPatientMeasureInfo = async (idx) => {
     const data = await dynamo.scan(params).promise();
 
     return data.Items;
-
-    // const connection = await pool.getConnection(async (conn) => conn);
-    // const getPatientMeasureInfoQuery = `SELECT name FROM user WHERE userIndex = ${idx}`;
-    // const [rows] = await connection.query(getPatientMeasureInfoQuery);
-    // connection.release();
-    
-    // // 현재 unix timestamp 구하기 (DynamoDB 데이터 조회 목적)
-    // const currTime = String(Math.floor(new Date().getTime() / 1000));
-
-    // /*
-    // 210820 Serin
-    // timestamp 기준으로 최근 2개만 불러오고자 했으나...
-    // Query key condition not supported라는 에러가 자꾸 발생
-    // */
-    
-    // const dynamo = new AWS.DynamoDB.DocumentClient();
-
-    // const params = {
-    //     TableName: dynamo_config.table_name,
-    //     ProjectionExpression: "userIndex, payload, #timestamp",
-    //     KeyConditionExpression: "begins_with(#timestamp, :num)",
-    //     ExpressionAttributeNames: {
-    //         "#timestamp": "timestamp"
-    //     },
-    //     ExpressionAttributeValues: {
-    //         ":num": "1"
-    //     },
-    //     Limit: 2
-    // }
-
-    // // 주석 풀고 실행하면 에러 발생
-    // //const data = await dynamo.query(params).promise();
-    // //console.log('조회결과 >', data);
-
-
-    // // const params = {
-    // //     TableName: dynamo_config.table_name,
-    // //     IndexName: "timestamp-index"
-    // // }
-
-    // // await dynamo.scan(params, (err, data) => {
-    // //     if (err) {
-    // //         console.log(err);
-    // //     } else {
-    // //         const { Items } = data;
-    // //         console.log('조회 >>', Items);
-    // //     }
-    // // });
-
-    // return rows[0].name;
 }
 
 exports.getDoctorInfo = async (idx) => {
