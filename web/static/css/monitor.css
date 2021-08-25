@@ -4,10 +4,12 @@
 } */
 
 .user1Video {
+    width: 66%;
+    float: left;
     z-index: 1;
     height: 600px;
-    margin: 20px;
-    background-color: rgb(153, 192, 153);
+    margin: 20px 0 20px 20px;
+    border: 1px solid #ccc;
 }
 
 .user2Video {
@@ -15,14 +17,73 @@
     z-index: 2;
     height: 200px;
     width: 300px;
-    left: 1175px;
+    left: 707px;
     top: 455px;
-    background-color: rgb(223, 194, 68);
+    border: 1px solid #ccc;
+}
+
+.monitorData {
+    width: 30%;
+    float: right;
+    z-index: 1;
+    height: 600px;
+    margin: 20px 20px 20px 0;
 }
 
 .monitorTable {
-    margin: 1rem;
-    padding: 1rem;
+    margin: 0.5rem;
+    padding: 0.5rem;
     text-align: center;
+    font-size: 1rem;
+}
+
+.getFullData {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.suspectedDisease {
+    width: 51%;
+    float: left;
+    height: 330px;
+    position: absolute;
+    top: 700px;
+    margin: 0 20px;
+}
+
+.suspectedArea {
+    width: 100%;
+    height: 265px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: scroll;
+    padding: 1.3rem;
+    font-size: 1.1rem;
+}
+
+.opinionArea {
+    width: 100%;
+    height: 265px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.opinion {
+    width: 45%;
+    float: right;
+    height: 330px;
+    margin: 2px 20px 0 20px;
+}
+
+.writeOpinion {
+    padding: 20px 20px 0 20px;
+}
+
+.exp {
     font-size: 1.2rem;
+    font-weight: 600;
+    padding-left: 1rem;
+    padding-bottom: 0.5rem;
 }

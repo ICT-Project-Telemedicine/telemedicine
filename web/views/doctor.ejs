@@ -143,13 +143,15 @@
                                         환자에게 센서를 이용하여 심박수, 체온, 산소포화도, 심전도를 측정하도록 하세요. <br><br>
                                     </div>
                                 <%} %>
-
                                 <div class="patientMonitor" onclick="patientDetail(<%= element.userIndex %>)"><b><%= element.name %> 환자</b> 모니터링 하러가기</div>
                             </div>
                         <% }); %>
                         
                         <script>
-                            patientDetail = (idx) => { location.href=`/doctor/<%=doctorIdx%>?patient=${idx}`; }
+                            patientDetail = (idx) => {
+                                console.log('plz;;', idx);
+                                location.href=`/doctor?patient=${idx}`;
+                            }
                         </script>
                     </div>
             </div>

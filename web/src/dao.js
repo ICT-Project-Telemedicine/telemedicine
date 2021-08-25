@@ -47,7 +47,7 @@ exports.getPatientName = async (idx) => {
 
 exports.getPatientBasicInfo = async (idx) => {
     const connection = await pool.getConnection(async (conn) => conn);
-    const getPatientBasicInfoQuery = `SELECT name ,sex, age, height, weight, BMI FROM patient WHERE patientIndex = ${idx};`;
+    const getPatientBasicInfoQuery = `SELECT sex, age, height, weight, BMI FROM patient WHERE patientIndex = ${idx};`;
     const [rows] = await connection.query(getPatientBasicInfoQuery);
     connection.release();
     return rows;
@@ -71,6 +71,30 @@ exports.getPatientMeasureInfo = async (idx) => {
         },
         ScanIndexForward: false,
         Limit: 5
+    };
+
+    const data = await dynamo.scan(params).promise();
+
+    return data.Items;
+}
+
+exports.getPatientCurrMeasureInfo = async (idx) => {
+    const dynamo = new AWS.DynamoDB.DocumentClient();
+
+    idx = parseInt(idx, 10);
+
+    const params = {
+        TableName: dynamo_config.table_name,
+        ProjectionExpression: "payload, #timestamp",
+        ExpressionAttributeNames: {
+            "#timestamp": "timestamp"
+        },
+        FilterExpression: 'userIndex = :idx',
+        ExpressionAttributeValues: {
+            ":idx": idx
+        },
+        ScanIndexForward: false,
+        Limit: 1
     };
 
     const data = await dynamo.scan(params).promise();

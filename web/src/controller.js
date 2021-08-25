@@ -207,11 +207,11 @@ exports.doctor = async function (req, res) {
         const patientIdxSet = new Set(patientIdxList);
 
         // 리스트에 없는 경우 
-        if (!patientIdxSet.has(patientIdx)) {
+        if (!patientIdxSet.has(String(patientIdx))) {
+
             return res.redirect('/doctor');
         }  else {
             // 리스트에 있는 경우
-            // 환자 기본 정보 (성별, 나이, 키, 몸무게, BMI)
             const rows = await dao.getPatientBasicInfo(patientIdx);
             const patientName = await dao.getPatientName(patientIdx);
 
@@ -226,7 +226,23 @@ exports.doctor = async function (req, res) {
                 'BMI': rows[0].BMI
             }
 
-            return res.render('doctorMonitor.ejs', {doctorIdx, patientBasicInfo});
+            // dynamo 조회
+            const [patientCurrMeasureInfo] = await dao.getPatientCurrMeasureInfo(patientIdx);
+            let changeDate = new Date(Number(patientCurrMeasureInfo.timestamp));
+            let year = changeDate.getFullYear();
+            let month = ('0' + (changeDate.getMonth() + 1)).slice(-2);
+            let day = ('0' + changeDate.getDate()).slice(-2);
+            let currDate = year + '-' + month + '-' + day;
+
+            // 환자 의료 정보
+            const currMeasureInfo = {
+                heartRate: patientCurrMeasureInfo.payload.bpm,
+                temperature: patientCurrMeasureInfo.payload.temperature,
+                oxygen: patientCurrMeasureInfo.payload.spo2,
+                date: currDate
+            }
+
+            return res.render('doctorMonitor.ejs', {doctorIdx, patientBasicInfo, currMeasureInfo});
         }
     }
 }
