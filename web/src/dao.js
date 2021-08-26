@@ -74,6 +74,7 @@ exports.getPatientMeasureInfo = async (idx) => {
     };
 
     const data = await dynamo.scan(params).promise();
+    data.Items.reverse();
 
     return data.Items;
 }
