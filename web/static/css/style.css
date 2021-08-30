@@ -10887,6 +10887,14 @@ textarea.form-control-lg {
   color: #2b6dd1;
 }
 
+.map {
+  margin: 1rem 5rem 4rem 5rem;
+  font-size: 1.3rem;
+  color: #2b6dd1;
+  width: 800px;
+  height: 400px;
+}
+
 /* toggle */
 
 .toggle_button {

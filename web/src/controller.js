@@ -56,11 +56,17 @@ exports.index = async function (req, res) {
     if (identity === 'patient') {
         // 지금 환자는 111, 이후에 DB 연결하면 조회하는 걸로 수정
         if (parseInt(code, 10) !== 111) {
-            logger.info(`Error Login - non valid patient code`);
+            logger.error(`Error Login - non valid patient code`);
             return res.redirect('/');
         }
         //userIndex = 117;
-        userIndex = await dao.getUserIndex(parseInt(code, 10), 0);
+        try {
+            userIndex = await dao.getUserIndex(parseInt(code, 10), 0);
+        } catch (e){
+            logger.error(`Error : ${e}`);
+            return res.redirect('/');
+        }
+        
 
     } else if (identity === 'doctor') {
         // 지금 의사는 222, 이후에 DB 연결하면 조회하는 걸로 수정
@@ -69,7 +75,12 @@ exports.index = async function (req, res) {
             return res.redirect('/');
         }
         //userIndex = 319;
-        userIndex = await dao.getUserIndex(parseInt(code, 10), 1);
+        try {
+            userIndex = await dao.getUserIndex(parseInt(code, 10), 1);
+        } catch (e){
+            logger.error(`Error : ${e}`);
+            return res.redirect('/');
+        }
 
     } else {
         logger.info(`Error Login - non valid quert string`);
