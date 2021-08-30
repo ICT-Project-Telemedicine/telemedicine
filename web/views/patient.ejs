@@ -26,8 +26,11 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="#checkMy">나의 건강 상태 확인</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#askQuestion">질문 남기기</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#goMonitor">의사 모니터링</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#findPharmacy">주변 약국 확인하기</a></li>
                         <li class="nav-item"><a class="nav-link" href="/logout">로그아웃</a></li>
-                        <li class="nav-item"><a class="nav-link" href="">서비스 소개</a></li>
                     </ul>
                 </div>
             </div>
@@ -40,12 +43,13 @@
                 <p class="text-black-50 mb-0">반갑습니다. 나의 건강 상태를 확인하고 모니터링을 진행해보세요.</p>
             </div>
         </header>
+
         <!-- Content section-->
         <section class="py-5">
             <div class="container my-5">
 
                 <div class="col-lg-9">
-                    <h2 class="title">나의 건강 상태 확인</h2>
+                    <a name="checkMy"></a><h2 class="title" name="checkMy">나의 건강 상태 확인</h2></a>
                     <p class="lead">센서를 통해 수집한 나의 건강 상태를 확인하세요.</p>
 
                     <div class="medical-data">
@@ -177,11 +181,22 @@
                     </div>
 
                     <br><br>
+                    <a name="askQuestion"><h2 class="title">질문 남기기</h2></a>
+                    <p class="lead">담당 의사에게 궁금한 점을 작성하세요.</p>
+                    <form>
+                        <textarea style="margin: 0.5rem 5rem; padding: 0.4rem;" cols="90" rows="6" placeholder="질문을 작성해주세요."></textarea>
+                        <input type="submit" style="margin-left: 5rem; width: 752px">
+                    </form>
+                    <div class="monitor">질문 목록 확인하기</div>
 
-                    <h2 class="title">의사 모니터링</h2>
+                    <br><br>
+                    <a name="goMonitor"><h2 class="title">의사 모니터링</h2></a>
                     <p class="lead">담당 의사와의 모니터링을 통해 상태를 공유하세요.</p>
-
                     <div class="monitor" onclick="goMonitor(<%= patientIdx %>)">모니터링 하러가기</div>
+
+                    <br><br>
+                    <a name="findPharmacy"><h2 class="title">주변 약국 확인하기</h2></a>
+                    <p class="lead">거주지 근처에 위치한 약국을 확인하세요.</p>
 
                     <script>
                         goMonitor = (idx) => { location.href=`/patient/<%=patientIdx%>/monitor`; }

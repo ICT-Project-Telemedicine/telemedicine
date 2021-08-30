@@ -10,6 +10,7 @@
     height: 600px;
     margin: 20px 0 20px 20px;
     border: 1px solid #ccc;
+    background-color: rgb(95, 95, 95);
 }
 
 .user2Video {
@@ -20,6 +21,7 @@
     left: 707px;
     top: 455px;
     border: 1px solid #ccc;
+    background-color: black;
 }
 
 .monitorData {

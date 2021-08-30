@@ -11070,3 +11070,7 @@ td {
 .highcharts-data-table tr:hover {
   background: #f1f7ff;
 }
+
+.askQuestion {
+  margin-left: 5rem;
+}
