@@ -59,7 +59,7 @@ loadMap = (latitude, longitude) => {
 
         // 마커 클릭이벤트 등록
         kakao.maps.event.addListener(marker, 'click', function() {
-            infowindow.setContent(`<div style="padding:5px;font-size:12px;"><a href=${place.place_url}>${place.place_name}</a></div>`);
+            infowindow.setContent(`<div style="padding:5px;font-size:12px;"><a href=${place.place_url} target= "_blank">${place.place_name}</a></div>`);
             infowindow.open(map, marker);
         });
 
