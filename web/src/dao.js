@@ -113,3 +113,21 @@ exports.getDoctorInfo = async (idx) => {
     connection.release();
     return rows[0]
 }
+
+exports.getMyDoctor = async (patientIdx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = 'SELECT doctorIndex FROM manage WHERE patientIndex = ?;';
+    const Params = [patientIdx];
+    const [rows] = await connection.query(Query, Params);
+    connection.release();
+    return rows;
+}
+
+exports.createNewQuestion = async (title, author, content, receiver) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = 'INSERT INTO board_question(title, author, content, receiver) VALUES (?, ?, ?, ?);';
+    const Params = [title, author, content, receiver];
+    const [rows] = await connection.query(Query, Params);
+    connection.release();
+    return rows;
+}

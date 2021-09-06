@@ -258,6 +258,26 @@ exports.doctor = async function (req, res) {
     }
 }
 
+exports.createQuestion = async function (req, res) {
+    const patientIdx = req.verifiedToken.id;
+    const { title,  content } = req.body;
+
+    if (!title || !content)
+        return res.json({"error":"타이틀 또는 내용 empty"});
+
+    try {
+        const [row] = await dao.getMyDoctor(patientIdx);
+        const doctorIdx = row.doctorIndex;
+        
+        const newQuestion = await dao.createNewQuestion(title, patientIdx, content, doctorIdx);
+        res.json({newQuestion});
+
+    } catch(e) {
+        logger.error("질문 생성 중 에러");
+        return res.json({"error":"질문 생성 중 error"});
+    }
+}
+
 exports.test = async function (req, res) {
     // dynamo 테스트 코드
     const items = await dao.findAll();

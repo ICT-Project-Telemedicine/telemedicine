@@ -10,5 +10,10 @@ module.exports = function(app){
     app.get('/doctor', auth, controller.doctor);
     app.get('/patient/:patientIdx/monitor', auth, controller.patientMonitor);
     
+    // app.get('/question', auth, controller.readAllQuestion);
+    // app.get('/question/:id', auth, controller.readOneQeustion);
+    app.post('/question', auth, controller.createQuestion);
+    // app.post('/answer', auth, controller.createAnswer);
+
     app.get('/test', controller.test);
 };
