@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const dynamodb = require('../config/dynamodb');
 const {logger} = require('../config/logger');
 const dao = require('./dao');
+const calculate = require('./calculate');
 
 require('dotenv').config();
 const secret = process.env.JWT_SIGNATURE;
@@ -253,9 +254,41 @@ exports.doctor = async function (req, res) {
                 date: currDate
             }
 
-            return res.render('doctorMonitor.ejs', {doctorIdx, patientBasicInfo, currMeasureInfo});
+            // 이상 증상 파악
+            const calculateInfo = calculate.calculate(patientBasicInfo, currMeasureInfo);
+
+            return res.render('doctorMonitor.ejs', {doctorIdx, patientBasicInfo, currMeasureInfo, calculateInfo});
         }
     }
+}
+
+exports.getFullData = async function (req, res) {
+    const patientIdx = req.query.patient;
+    const row = await dao.getFullData(patientIdx);
+
+    let heartRate = [];
+    let temperature = [];
+    let oxygen = [];
+    let date = [];
+
+    row.forEach((e) => {
+        let changeDate = new Date(Number(e.timestamp));
+        let year = changeDate.getFullYear();
+        let month = ('0' + (changeDate.getMonth() + 1)).slice(-2);
+        let day = ('0' + changeDate.getDate()).slice(-2);
+        let currDate = year + '-' + month + '-' + day;
+        heartRate.push(e.payload.bpm);
+        temperature.push(e.payload.temperature);
+        oxygen.push(e.payload.spo2);
+        date.push(currDate);
+    });
+
+    heartRate.reverse();
+    temperature.reverse();
+    oxygen.reverse();
+    date.reverse();
+
+    return res.render('fullData.ejs', {heartRate, temperature, oxygen, date});
 }
 
 exports.createQuestion = async function (req, res) {

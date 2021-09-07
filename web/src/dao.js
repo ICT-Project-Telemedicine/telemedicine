@@ -114,6 +114,24 @@ exports.getDoctorInfo = async (idx) => {
     return rows[0]
 }
 
+exports.getFullData = async (patientIdx) => {
+    const idx = Number(patientIdx);
+    const dynamo = new AWS.DynamoDB.DocumentClient();
+    const params = {
+        TableName: dynamo_config.table_name,
+        ProjectionExpression: "payload, #timestamp",
+        ExpressionAttributeNames: {
+            "#timestamp": "timestamp"
+        },
+        FilterExpression: 'userIndex = :idx',
+        ExpressionAttributeValues: {
+            ":idx": idx
+        }
+    };
+    const data = await dynamo.scan(params).promise();
+    return data.Items;
+}
+
 exports.getMyDoctor = async (patientIdx) => {
     const connection = await pool.getConnection(async (conn) => conn);
     const Query = 'SELECT doctorIndex FROM manage WHERE patientIndex = ?;';

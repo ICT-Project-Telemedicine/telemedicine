@@ -89,7 +89,7 @@
                         <td>-</td>
                     </tr>
                 </table>
-                <div class="getFullData">전체 의료 기록 조회하기</div>
+                <div class="getFullData" onclick="fullDataModal(<%= patientBasicInfo.patientIdx %>)">전체 의료 기록 조회하기</div>
             </div>
 
             <!-- 의사 영상 -->
@@ -100,15 +100,10 @@
             <div class="suspectedDisease">
                 <div class="exp">의심 증상</div>
                 <div class="suspectedArea">
-                    ○○에 따라 □□가 예상됩니다. <br>
-                    ○○에 따라 □□가 예상됩니다. <br>
-                    ○○에 따라 □□가 예상됩니다. <br>
-                    ○○에 따라 □□가 예상됩니다. <br>
-                    ○○에 따라 □□가 예상됩니다. <br>
-                    ○○에 따라 □□가 예상됩니다. <br>
-                    ○○에 따라 □□가 예상됩니다. <br>
-                    ○○에 따라 □□가 예상됩니다. <br>
-                    ○○에 따라 □□가 예상됩니다. <br>
+                    <%= calculateInfo.checkBPM %> <br><br>
+                    <%= calculateInfo.checkTemp %> <br><br>
+                    <%= calculateInfo.checkSpo2 %> <br><br>
+                    <%= calculateInfo.checkFat %> <br>
                 </div>
             </div>
 
@@ -116,12 +111,9 @@
                 <div class="exp">의사 소견 작성란</div>
                 <div class="opinionArea">
                     <form class="writeOpinion">
-                        <input type="radio" name="subject" value="aaa"> aaa
-                        <input type="radio" name="subject" value="bbb"> bbb
-                        <input type="radio" name="subject" value="ccc"> ccc
-                        <input type="radio" name="subject" value="ddd"> ddd
-                        <textarea style="margin-top: 0.5rem; padding: 0.4rem;" cols="76" rows="6" placeholder="전문 소견을 작성해주세요."></textarea>
-                        <input type="submit" style="width: 639px">
+                        <textarea style="margin-top: 0.5rem; padding: 0.4rem;" cols="76" rows="1" placeholder="처방할 약을 작성해주세요."></textarea>
+                        <textarea style="margin-top: 0.5rem; padding: 0.4rem;" cols="76" rows="4" placeholder="전문 소견을 작성해주세요."></textarea>
+                        <input type="submit" style="margin-top: 0.5rem; width: 639px">
                      </form>
                 </div>                
             </div>
@@ -130,6 +122,12 @@
 
         <br><br><br><br><br>
         
+        <script>
+            fullDataModal = (idx) => {
+                window.open(`/fullData?patient=${idx}`, "haha", "width=800, height=400");
+            }
+        </script>
+
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
         <!-- ECT Pulse Graph -->

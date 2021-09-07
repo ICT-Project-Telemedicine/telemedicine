@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>MediDoc</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link rel="stylesheet" href="/css/style.css" type="text/css">
+        <link rel="stylesheet" href="/css/fullData.css" type="text/css">
+    </head>
+    <body>
+        <br><br>
+        <h3>환자 전체 의료 기록</h3>
+        <br><br>
+        <table border="1" style="margin: 1rem;">
+            <tr>
+                <td style="background-color: rgb(211, 211, 211);"><b>측정일</b></td>
+                <% date.forEach(element => { %>
+                    <td><%= element %></td>
+                <%}) %>
+            </tr>
+            <tr>
+                <td style="background-color: rgb(211, 211, 211);"><b>심박동수</b></td>
+                <% heartRate.forEach(element => { %>
+                    <td><%= element %></td>
+                <%}) %>
+            </tr>
+            <tr>
+                <td style="background-color: rgb(211, 211, 211);"><b>체온</b></td>
+                <% temperature.forEach(element => { %>
+                    <td><%= element %></td>
+                <%}) %>
+            </tr>
+            <tr>
+                <td style="background-color: rgb(211, 211, 211);"><b>산소포화도</b></td>
+                <% oxygen.forEach(element => { %>
+                    <td><%= element %></td>
+                <%}) %>
+            </tr>
+        </table>
+
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+</html>
