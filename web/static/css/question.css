@@ -1,0 +1,42 @@
+.questionTable {
+    text-align: center;
+    margin: 3rem 1rem;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 1.3rem;
+}
+
+thead {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    background-color: rgb(224, 224, 224)
+}
+
+tr {
+    border-bottom: 0px solid #ccc;
+}
+
+.question {
+    margin: 3rem 1rem;
+    border: 1rem solid black;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 1.3rem;
+}
+
+.qTitle {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.qTitleName {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.qContent {
+    font-size: 1.2rem;
+}

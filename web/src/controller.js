@@ -155,13 +155,37 @@ exports.patient = async function (req, res) {
 
 exports.patientMonitor = async function (req, res) {
     const patientIdx = req.verifiedToken.id;
+    const rows = await dao.getPatientBasicInfo(patientIdx);
     const patientName = await dao.getPatientName(patientIdx);
+    
+    // 환자 기본 정보
+    const patientBasicInfo = {
+        'patientIdx': patientIdx,
+        'name': patientName,
+        'sex': rows[0].sex,
+        'age': rows[0].age,
+        'height': rows[0].height,
+        'weight': rows[0].weight,
+        'BMI': rows[0].BMI
+    }
 
-    const heartRate = 68; // 심박동수 예시
-    const temperature = 36.5; // 체온 예시
-    const oxygen = 98; // 산소포화도 예시 
+    // dynamo 조회
+    const [patientCurrMeasureInfo] = await dao.getPatientCurrMeasureInfo(patientIdx);
+    let changeDate = new Date(Number(patientCurrMeasureInfo.timestamp));
+    let year = changeDate.getFullYear();
+    let month = ('0' + (changeDate.getMonth() + 1)).slice(-2);
+    let day = ('0' + changeDate.getDate()).slice(-2);
+    let currDate = year + '-' + month + '-' + day;
 
-    return res.render('patientMonitor.ejs', {patientName, heartRate, temperature, oxygen});
+    // 환자 의료 정보
+    const currMeasureInfo = {
+        heartRate: patientCurrMeasureInfo.payload.bpm,
+        temperature: patientCurrMeasureInfo.payload.temperature,
+        oxygen: patientCurrMeasureInfo.payload.spo2,
+        date: currDate
+    }
+
+    return res.render('patientMonitor.ejs', {patientBasicInfo, currMeasureInfo});
 }
 
 exports.doctor = async function (req, res) {
@@ -248,10 +272,10 @@ exports.doctor = async function (req, res) {
 
             // 환자 의료 정보
             const currMeasureInfo = {
-                heartRate: patientCurrMeasureInfo.payload.bpm,
-                temperature: patientCurrMeasureInfo.payload.temperature,
-                oxygen: patientCurrMeasureInfo.payload.spo2,
-                date: currDate
+                'heartRate': patientCurrMeasureInfo.payload.bpm,
+                'temperature': patientCurrMeasureInfo.payload.temperature,
+                'oxygen': patientCurrMeasureInfo.payload.spo2,
+                'date': currDate
             }
 
             // 이상 증상 파악
@@ -289,6 +313,41 @@ exports.getFullData = async function (req, res) {
     date.reverse();
 
     return res.render('fullData.ejs', {heartRate, temperature, oxygen, date});
+}
+
+exports.questionList = async function (req, res) {
+    const patientIdx = req.query.patient;
+    const patientName = await dao.getPatientName(patientIdx);
+    const questionList = await dao.getQuestionList(patientIdx);
+
+    questionList.forEach((e) => {
+        let changeDate = new Date(Number(e.createdAt));
+        let year = changeDate.getFullYear();
+        let month = ('0' + (changeDate.getMonth() + 1)).slice(-2);
+        let day = ('0' + changeDate.getDate()).slice(-2);
+        e.createdAt = year + '-' + month + '-' + day;
+    })
+
+    return res.render('questionList.ejs', {patientName, questionList});
+}
+
+exports.questionDetail = async function (req, res) {
+    const questionIdx = req.params.questionIdx;
+    const [questionDetail] = await dao.getQuestionDetail(questionIdx);
+
+    let changeDate = new Date(Number(questionDetail.createdAt));
+    let year = changeDate.getFullYear();
+    let month = ('0' + (changeDate.getMonth() + 1)).slice(-2);
+    let day = ('0' + changeDate.getDate()).slice(-2);
+    questionDetail.createdAt = year + '-' + month + '-' + day;
+
+    let changeDate2 = new Date(Number(questionDetail.updatedAt));
+    let year2 = changeDate2.getFullYear();
+    let month2 = ('0' + (changeDate.getMonth() + 1)).slice(-2);
+    let day2 = ('0' + changeDate.getDate()).slice(-2);
+    questionDetail.updatedAt = year2 + '-' + month2 + '-' + day2;
+    
+    return res.render('questionDetail.ejs', {questionDetail});
 }
 
 exports.createQuestion = async function (req, res) {

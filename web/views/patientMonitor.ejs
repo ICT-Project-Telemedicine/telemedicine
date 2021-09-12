@@ -28,13 +28,81 @@
         </nav>
         <!-- Content section-->
         <section class="py-5">
+
+            <!-- 의사 영상 -->
             <div class="user1Video">
-                환자 or 의사 영상
+                의사 영상
             </div>
+
+            <!-- 환자 정보 -->
+            <div class="monitorData">
+                <table class="monitorTable">
+                    <tr>
+                        <td style="background-color: #ccc">이름</td>
+                        <td><%= patientBasicInfo.name %></td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #ccc">성별</td>
+                        <td><%= patientBasicInfo.sex %></td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #ccc">나이</td>
+                        <td><%= patientBasicInfo.age %>세</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #ccc">키</td>
+                        <td><%= patientBasicInfo.height %>cm</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #ccc">몸무게</td>
+                        <td><%= patientBasicInfo.weight %>kg</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #ccc">BMI</td>
+                        <td><%= patientBasicInfo.BMI %>kg/m<sup>2</sup></td>
+                    </tr>
+                </table>
+                <table class="monitorTable">
+                    <tr>
+                        <td style="background-color: #ccc">측정일</td>
+                        <td><%= currMeasureInfo.date %></td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #ccc">심박동수</td>
+                        <td><%= currMeasureInfo.heartRate %>BPM</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #ccc">체온</td>
+                        <td><%= currMeasureInfo.temperature %>°C</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #ccc">산소포화도</td>
+                        <td><%= currMeasureInfo.oxygen %>%</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #ccc">심전도</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td style="background-color: #ccc">근전도</td>
+                        <td>-</td>
+                    </tr>
+                </table>
+                <div class="getFullData" onclick="fullDataModal(<%= patientBasicInfo.patientIdx %>)">전체 의료 기록 조회하기</div>
+            </div>
+
+            <!-- 환자 영상 -->
             <div class="user2Video">
-                환자 or 의사 영상
+                환자 영상
             </div>
         </section>
+
+        <script>
+            fullDataModal = (idx) => {
+                window.open(`/fullData?patient=${idx}`, "haha", "width=800, height=400");
+            }
+        </script>
+
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
         <!-- ECT Pulse Graph -->

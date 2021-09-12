@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>MediDoc</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link rel="stylesheet" href="/css/style.css" type="text/css">
+        <link rel="stylesheet" href="/css/question.css" type="text/css">
+    </head>
+    <body>
+        <div class="question">
+            <div class="qTitle">
+                <div class="qTitleName"><%= questionDetail.title %></div>
+                <div class="qInfo">
+                    <b>작성자</b> 한이음
+                    <b>작성일</b> <%= questionDetail.createdAt %>
+                    <b>수정일</b> <%= questionDetail.updatedAt %>
+                </div>
+            </div>            
+            <div class="qContent"><%= questionDetail.content %></div>
+        </div>
+
+        <div class="answer">
+
+        </div>
+    </body>
+</html>

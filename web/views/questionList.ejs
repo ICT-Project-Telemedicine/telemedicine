@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>MediDoc</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link rel="stylesheet" href="/css/style.css" type="text/css">
+        <link rel="stylesheet" href="/css/question.css" type="text/css">
+    </head>
+    <body>
+        <table class="questionTable">
+            <thead>
+                <tr>
+                    <th width="30">번호</th>
+                    <th width="800">제목</th>
+                    <th width="50">작성자</th>
+                    <th width="70">날짜</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% questionList.forEach(element => { %>
+                    <tr>
+                        <td width="30"><%= element.id %></td>
+                        <td width="800"><a href="/question/<%= element.id %>"><%= element.title %></a></td>
+                        <td width="50"><%= patientName %></td>
+                        <td width="70"><%= element.createdAt %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </body>
+</html>

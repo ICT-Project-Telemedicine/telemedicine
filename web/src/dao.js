@@ -111,7 +111,7 @@ exports.getDoctorInfo = async (idx) => {
     FROM user u1 WHERE userIndex = ${idx};`;
     const [rows] = await connection.query(getDoctorInfoQuery);
     connection.release();
-    return rows[0]
+    return rows[0];
 }
 
 exports.getFullData = async (patientIdx) => {
@@ -137,6 +137,22 @@ exports.getMyDoctor = async (patientIdx) => {
     const Query = 'SELECT doctorIndex FROM manage WHERE patientIndex = ?;';
     const Params = [patientIdx];
     const [rows] = await connection.query(Query, Params);
+    connection.release();
+    return rows;
+}
+
+exports.getQuestionList = async (patientIdx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `SELECT id, title, createdAt, status FROM board_question WHERE author = ${patientIdx} AND status != 'DELETED';`;
+    const [rows] = await connection.query(Query);
+    connection.release();
+    return rows;
+}
+
+exports.getQuestionDetail = async (questionIdx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `SELECT title, content, createdAt, updatedAt, status FROM board_question WHERE id = ${questionIdx};`;
+    const [rows] = await connection.query(Query);
     connection.release();
     return rows;
 }

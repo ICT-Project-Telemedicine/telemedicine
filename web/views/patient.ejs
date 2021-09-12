@@ -186,10 +186,11 @@
                     <a name="askQuestion"><h2 class="title">질문 남기기</h2></a>
                     <p class="lead">담당 의사에게 궁금한 점을 작성하세요.</p>
                     <form>
-                        <textarea style="margin: 0.5rem 5rem; padding: 0.4rem;" cols="90" rows="6" placeholder="질문을 작성해주세요."></textarea>
+                        <textarea style="margin: 0 5rem; padding: 0.4rem;" cols="90" rows="1" placeholder="제목"></textarea>
+                        <textarea style="margin: 0.5rem 5rem; padding: 0.4rem;" cols="90" rows="6" placeholder="질문 내용"></textarea>
                         <input type="submit" style="margin-left: 5rem; width: 752px">
                     </form>
-                    <div class="monitor">질문 목록 확인하기</div>
+                    <div class="monitor" onclick="questionList(<%= patientIdx %>)">질문 목록 확인하기</div>
 
                     <br><br>
                     <a name="goMonitor"><h2 class="title">의사 모니터링</h2></a>
@@ -202,12 +203,20 @@
 
                     <div id="map" class="map"></div>
 
-                    <script>
-                        goMonitor = (idx) => { location.href=`/patient/<%=patientIdx%>/monitor`; }
-                    </script>
+                    
                 </div>
             </div>
         </section>
+
+        <script>
+            questionList = (idx) => {
+                window.open(`/questionList?patient=${idx}`, "haha", "width=800, height=800");
+            }
+        </script>
+
+        <script>
+            goMonitor = (idx) => { location.href=`/patient/<%=patientIdx%>/monitor`; }
+        </script>
 
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
