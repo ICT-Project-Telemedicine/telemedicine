@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const dynamodb = require('../config/dynamodb');
 const {logger} = require('../config/logger');
+const transcribe = require('../config/transcribe');
 const dao = require('./dao');
 const calculate = require('./calculate');
 
@@ -315,4 +316,9 @@ exports.test = async function (req, res) {
     // dynamo 테스트 코드
     const items = await dao.findAll();
     return res.send({items});
+}
+
+exports.getScript = async function (req, res) {
+    const data = await transcribe.run('one-short-1.mp40934af26-50be-4f62-81f0-277faa31826b')
+    return res.send({data});
 }

@@ -17,4 +17,6 @@ module.exports = function(app){
     // app.post('/answer', auth, controller.createAnswer);
 
     app.get('/test', controller.test);
+
+    app.get('/script', controller.getScript);
 };
