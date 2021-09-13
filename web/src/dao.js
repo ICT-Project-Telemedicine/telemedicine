@@ -159,7 +159,11 @@ exports.getQuestionDetail = async (questionIdx) => {
 
 exports.getAnswer = async (questionIdx) => {
     const connection = await pool.getConnection(async (conn) => conn);
-    const Query = `SELECT title, content, createdAt, updatedAt, status FROM board_answer WHERE questionId = ${questionIdx};`;
+    const Query = `
+        SELECT title, content, createdAt, updatedAt, status,
+        (SELECT name FROM user INNER JOIN board_answer ON board_answer.sender = user.userIndex) AS name
+        FROM board_answer WHERE questionId = ${questionIdx};
+    `;
     const [rows] = await connection.query(Query);
     connection.release();
     return rows;

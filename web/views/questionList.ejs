@@ -26,7 +26,12 @@
                 <% questionList.forEach(element => { %>
                     <tr>
                         <td width="30"><%= element.id %></td>
-                        <td width="800"><a href="/question/<%= element.id %>"><%= element.title %></a></td>
+                        <td width="800" style="text-align: left;">
+                            <a href="/question/<%= element.id %>"><%= element.title %></a>
+                            <% if (element.status === 'clear') { %>
+                                <img src="/img/reply.png" style="width: 25px; margin-left: 0.5rem;"/>
+                            <% } %>
+                        </td>
                         <td width="50"><%= patientName %></td>
                         <td width="70"><%= element.createdAt %></td>
                     </tr>

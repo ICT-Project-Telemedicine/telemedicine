@@ -18,7 +18,7 @@ tr {
 }
 
 .question, .answer {
-    margin: 1.5rem 1rem;
+    margin: 0.5rem 1rem;
     border: 1rem solid black;
     background-color: white;
     border: 1px solid #ccc;
@@ -53,4 +53,32 @@ tr {
 .qBtn {
     float: right;
     color: rgb(117, 117, 117);
+}
+
+.replyText {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-top: 1rem;
+}
+
+.reply {
+    background-color: rgb(240, 240, 240);
+    margin-top: 0.3rem;
+}
+
+.replyElement {
+    padding: 0.5rem 0;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+.replyElement span {
+    padding: 0 0.1rem;
+}
+
+.backToList {
+    text-align: right;
+    margin-top: 2rem;
+    margin-right: 1.5rem;
+    font-size: 0.9rem;
 }
