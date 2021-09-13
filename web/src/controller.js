@@ -316,7 +316,7 @@ exports.getFullData = async function (req, res) {
 }
 
 exports.questionList = async function (req, res) {
-    const patientIdx = req.query.patient;
+    const patientIdx = req.verifiedToken.id;
     const patientName = await dao.getPatientName(patientIdx);
     const questionList = await dao.getQuestionList(patientIdx);
 
