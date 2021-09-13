@@ -13,9 +13,9 @@ module.exports = function(app){
     app.get('/questionList', auth, controller.questionList);
     app.get('/question/:questionIdx', auth, controller.questionDetail);
     
-    // app.get('/question', auth, controller.readAllQuestion);
-    // app.get('/question/:id', auth, controller.readOneQeustion);
     app.post('/question', auth, controller.createQuestion);
+    app.put('/question', auth, controller.updateQuestion);
+    app.delete('/question/:questionIdx', auth, controller.deleteQuestion);
     // app.post('/answer', auth, controller.createAnswer);
 
     app.get('/test', controller.test);

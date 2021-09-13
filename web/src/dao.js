@@ -165,3 +165,29 @@ exports.createNewQuestion = async (title, author, content, receiver) => {
     connection.release();
     return rows;
 }
+
+exports.updateQuestion = async (questionIdx, patientIdx, title, content) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `
+        UPDATE board_question
+        SET title = ?, content = ?
+        WHERE id = ? AND author = ? AND status = 'normal';
+    `;
+    const Params = [title, content, questionIdx, patientIdx];
+    const [rows] = await connection.query(Query, Params);
+    connection.release();
+    return rows;
+}
+
+exports.deleteQuestion = async (questionIdx, patientIdx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `
+        UPDATE board_question
+        SET status = 'deleted'
+        WHERE id = ? AND author = ?;
+    `;
+    const Params = [questionIdx, patientIdx];
+    const [rows] = await connection.query(Query, Params);
+    connection.release();
+    return rows;
+}

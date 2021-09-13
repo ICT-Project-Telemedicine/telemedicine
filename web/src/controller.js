@@ -370,6 +370,44 @@ exports.createQuestion = async function (req, res) {
     }
 }
 
+exports.updateQuestion = async function (req, res) {
+    const patientIdx = req.verifiedToken.id;
+    const { questionIdx, title,  content } = req.body;
+
+    if (!questionIdx || !title || !content || Number.isNaN(questionIdx)) {
+        logger.error("PUT /question - unvalid parameter");
+        return res.sendStatus(404);
+    }
+
+    try {
+        const updatedQuestion = await dao.updateQuestion(questionIdx, patientIdx, title, content);
+        res.json({updatedQuestion});
+
+    } catch(e) {
+        logger.error("PUT /question - error");
+        return res.json({"error":"질문 수정 중 error"});
+    }
+}
+
+exports.deleteQuestion = async function (req, res) {
+    const patientIdx = req.verifiedToken.id;
+    const questionIdx = req.params.questionIdx;
+
+    if (!questionIdx || Number.isNaN(questionIdx)) {
+        logger.error("DELETE /question - unvalid parameter");
+        return res.sendStatus(404);
+    }
+
+    try {
+        const deletedQuestion = await dao.deleteQuestion(questionIdx, patientIdx);
+        res.json({deletedQuestion});
+
+    } catch(e) {
+        logger.error("DELETE /question - error");
+        return res.json({"error":"질문 삭제 중 error"});
+    }
+}
+
 exports.test = async function (req, res) {
     // dynamo 테스트 코드
     const items = await dao.findAll();
