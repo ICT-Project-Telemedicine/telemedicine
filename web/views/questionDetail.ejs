@@ -17,16 +17,32 @@
             <div class="qTitle">
                 <div class="qTitleName"><%= questionDetail.title %></div>
                 <div class="qInfo">
-                    <b>작성자</b> 한이음
-                    <b>작성일</b> <%= questionDetail.createdAt %>
-                    <b>수정일</b> <%= questionDetail.updatedAt %>
+                    <span> <b>작성자</b> 한이음 </span>
+                    <span> <b>작성일</b> <%= questionDetail.createdAt %> </span>
+                    <span> <b>수정일</b> <%= questionDetail.updatedAt %> </span>
+                    <span class="qBtn" id="delete"> 삭제 </span>
+                    <span class="qBtn" id="modify"> 수정 </span>
                 </div>
             </div>            
             <div class="qContent"><%= questionDetail.content %></div>
         </div>
 
-        <div class="answer">
-
-        </div>
+        <% if (questionDetail.status === 'clear') { %>
+            <div class="answer">
+                <div class="aTitle">
+                    <div class="aTitleName">
+                        <img src="/img/reply.png" style="width: 25px" />
+                        <%= answer.title %></div>
+                    <div class="aInfo">
+                        <span> <b>작성자</b> 홍지후 </span>
+                        <span> <b>작성일</b> <%= answer.createdAt %> </span>
+                        <span> <b>수정일</b> <%= answer.updatedAt %> </span>
+                    </div>
+                </div>            
+                <div class="aContent"><%= answer.content %></div>
+                <textarea style="margin-top: 1rem; padding: 0 0.5rem;" cols="80" rows="1" placeholder="댓글"></textarea>
+            </div>
+        <% } %>
+        
     </body>
 </html>

@@ -157,6 +157,14 @@ exports.getQuestionDetail = async (questionIdx) => {
     return rows;
 }
 
+exports.getAnswer = async (questionIdx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `SELECT title, content, createdAt, updatedAt, status FROM board_answer WHERE questionId = ${questionIdx};`;
+    const [rows] = await connection.query(Query);
+    connection.release();
+    return rows;
+}
+
 exports.createNewQuestion = async (title, author, content, receiver) => {
     const connection = await pool.getConnection(async (conn) => conn);
     const Query = 'INSERT INTO board_question(title, author, content, receiver) VALUES (?, ?, ?, ?);';

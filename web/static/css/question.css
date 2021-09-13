@@ -17,8 +17,8 @@ tr {
     border-bottom: 0px solid #ccc;
 }
 
-.question {
-    margin: 3rem 1rem;
+.question, .answer {
+    margin: 1.5rem 1rem;
     border: 1rem solid black;
     background-color: white;
     border: 1px solid #ccc;
@@ -26,17 +26,31 @@ tr {
     padding: 1.3rem;
 }
 
-.qTitle {
+.qTitle, .aTitle {
     border-bottom: 1px solid #ccc;
     padding-bottom: 1rem;
     margin-bottom: 1rem;
 }
 
-.qTitleName {
+.qTitleName, .aTitleName {
     font-size: 1.5rem;
     margin-bottom: 0.5rem;
 }
 
-.qContent {
+.qInfo span, .aInfo span {
+    padding-right: 0.5rem;
+}
+
+.qContent, .aContent {
     font-size: 1.2rem;
+}
+
+.aContent {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 1rem;
+}
+
+.qBtn {
+    float: right;
+    color: rgb(117, 117, 117);
 }

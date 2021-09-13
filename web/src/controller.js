@@ -340,13 +340,27 @@ exports.questionDetail = async function (req, res) {
     let month = ('0' + (changeDate.getMonth() + 1)).slice(-2);
     let day = ('0' + changeDate.getDate()).slice(-2);
     questionDetail.createdAt = year + '-' + month + '-' + day;
-
     let changeDate2 = new Date(Number(questionDetail.updatedAt));
     let year2 = changeDate2.getFullYear();
-    let month2 = ('0' + (changeDate.getMonth() + 1)).slice(-2);
-    let day2 = ('0' + changeDate.getDate()).slice(-2);
+    let month2 = ('0' + (changeDate2.getMonth() + 1)).slice(-2);
+    let day2 = ('0' + changeDate2.getDate()).slice(-2);
     questionDetail.updatedAt = year2 + '-' + month2 + '-' + day2;
     
+    // 의사 답변 있는 경우 답변 조회
+    if (questionDetail.status === 'clear') {
+        const [answer] = await dao.getAnswer(questionIdx);
+        let changeDate3 = new Date(Number(answer.createdAt));
+        let year3 = changeDate3.getFullYear();
+        let month3 = ('0' + (changeDate3.getMonth() + 1)).slice(-2);
+        let day3 = ('0' + changeDate3.getDate()).slice(-2);
+        answer.createdAt = year3 + '-' + month3 + '-' + day3;
+        let changeDate4 = new Date(Number(answer.updatedAt));
+        let year4 = changeDate4.getFullYear();
+        let month4 = ('0' + (changeDate4.getMonth() + 1)).slice(-2);
+        let day4 = ('0' + changeDate4.getDate()).slice(-2);
+        answer.updatedAt = year4 + '-' + month4 + '-' + day4;
+        return res.render('questionDetail.ejs', {questionDetail, answer});
+    }
     return res.render('questionDetail.ejs', {questionDetail});
 }
 
