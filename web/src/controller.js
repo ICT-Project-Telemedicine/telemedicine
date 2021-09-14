@@ -2,7 +2,9 @@ const jwt = require('jsonwebtoken');
 const dynamodb = require('../config/dynamodb');
 const {logger} = require('../config/logger');
 const dao = require('./dao');
+const service = require('./service');
 const calculate = require('./calculate');
+const { PATIENT, DOCTOR } = require('../config/variable');
 
 require('dotenv').config();
 const secret = process.env.JWT_SIGNATURE;
@@ -29,13 +31,14 @@ exports.index = async function (req, res) {
         };
         p.then((verifiedToken)=>{
             const userIndex = verifiedToken.id;
+            const status = verifiedToken.status;
             
             logger.info('Index - token');
             // 토큰 확인 (DB 조회)
-            if(userIndex == 117)
-                return res.redirect('/patient/117');
+            if(status == PATIENT)
+                return res.redirect('/patient');
             else
-                return res.redirect('/doctor/319');
+                return res.redirect('/doctor');
 
         }).catch(onError);
     } else {
@@ -52,6 +55,7 @@ exports.index = async function (req, res) {
     const identity = req.query.identity;
     const code = req.body.inputCode;
     let userIndex = 0;
+    let status = 0;
     
     // query string 및 inputCode validation check
     if (identity === 'patient') {
@@ -63,6 +67,7 @@ exports.index = async function (req, res) {
         //userIndex = 117;
         try {
             userIndex = await dao.getUserIndex(parseInt(code, 10), 0);
+            status = PATIENT;
         } catch (e){
             logger.error(`Error : ${e}`);
             return res.redirect('/');
@@ -78,6 +83,7 @@ exports.index = async function (req, res) {
         //userIndex = 319;
         try {
             userIndex = await dao.getUserIndex(parseInt(code, 10), 1);
+            status = DOCTOR;
         } catch (e){
             logger.error(`Error : ${e}`);
             return res.redirect('/');
@@ -91,6 +97,7 @@ exports.index = async function (req, res) {
     //토큰 생성
     let token = await jwt.sign({
             id: userIndex,
+            status: status
         },
         secret,
         {
@@ -354,19 +361,19 @@ exports.createQuestion = async function (req, res) {
     const patientIdx = req.verifiedToken.id;
     const { title,  content } = req.body;
 
-    if (!title || !content)
-        return res.json({"error":"타이틀 또는 내용 empty"});
+    if (!title || !content) {
+        logger.error("POST /question - unvalid parameter");
+        return res.sendStatus(400);
+    }
 
     try {
         const [row] = await dao.getMyDoctor(patientIdx);
         const doctorIdx = row.doctorIndex;
-        
-        const newQuestion = await dao.createNewQuestion(title, patientIdx, content, doctorIdx);
-        res.json({newQuestion});
-
+        await dao.createNewQuestion(title, patientIdx, content, doctorIdx);
+        res.sendStatus(200);
     } catch(e) {
-        logger.error("질문 생성 중 에러");
-        return res.json({"error":"질문 생성 중 error"});
+        logger.error(`POST /question - ${e}`);
+        res.sendStatus(500);
     }
 }
 
@@ -376,7 +383,7 @@ exports.updateQuestion = async function (req, res) {
 
     if (!questionIdx || !title || !content || Number.isNaN(questionIdx)) {
         logger.error("PUT /question - unvalid parameter");
-        return res.sendStatus(404);
+        return res.sendStatus(400);
     }
 
     try {
@@ -384,8 +391,8 @@ exports.updateQuestion = async function (req, res) {
         res.json({updatedQuestion});
 
     } catch(e) {
-        logger.error("PUT /question - error");
-        return res.json({"error":"질문 수정 중 error"});
+        logger.error(`PUT /question - ${e}`);
+        res.sendStatus(500);
     }
 }
 
@@ -395,7 +402,7 @@ exports.deleteQuestion = async function (req, res) {
 
     if (!questionIdx || Number.isNaN(questionIdx)) {
         logger.error("DELETE /question - unvalid parameter");
-        return res.sendStatus(404);
+        return res.sendStatus(400);
     }
 
     try {
@@ -403,10 +410,59 @@ exports.deleteQuestion = async function (req, res) {
         res.json({deletedQuestion});
 
     } catch(e) {
-        logger.error("DELETE /question - error");
-        return res.json({"error":"질문 삭제 중 error"});
+        logger.error(`DELETE /question - ${e}`);
+        res.sendStatus(500);
     }
 }
+
+exports.createAnswer = async function (req, res) {
+    const userIdx = req.verifiedToken.id;
+    const userStatus = req.verifiedToken.status;
+    const { questionIdx, title, content } = req.body;
+
+    if (!questionIdx || !content || Number.isNaN(questionIdx)) {
+        logger.error("POST /answer - unvalid parameter");
+        return res.sendStatus(400);
+    }
+
+    try {
+        // 질문 유효한지 확인
+        const countAnswerRow = await service.getCountAnswer(questionIdx);
+        const isDoctorAnswer = countAnswerRow.doctorAnswer;
+        const countAnswer = countAnswerRow.count;
+        // 질문이 없는 경우
+        if (countAnswer < 0) {
+            logger.error("POST /answer - not exist question");
+            return res.sendStatus(400);
+        }
+        // 답변 생성
+        await service.addAnswer(questionIdx, userIdx, userStatus, title, content, countAnswer, isDoctorAnswer);
+        res.sendStatus(200);
+    } catch(e) {
+        logger.error(`POST /answer - ${e}`);
+        return res.sendStatus(500);
+    }
+}
+
+// exports.updateAnswer = async function (req, res) {
+//     const userIdx = req.verifiedToken.id;
+//     const {
+//         answerId,
+//         title,
+//         content
+//     } = req.body;
+
+//     if (!answerId || !content || Number.isNaN(answerId)) {
+//         logger.error("PUT /answer - unvalid parameter");
+//         return res.sendStatus(400);
+//     }
+// }
+
+// exports.deleteAnswer = async function (req, res) {
+//     const userIdx = req.verifiedToken.id;
+
+//     answerIdx
+// }
 
 exports.test = async function (req, res) {
     // dynamo 테스트 코드

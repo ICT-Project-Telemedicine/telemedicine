@@ -1,4 +1,5 @@
 const { pool } = require('../config/database');
+const {logger} = require('../config/logger');
 const AWS = require('aws-sdk');
 const dynamo_config = require('../config/dynamodb');
 AWS.config.update(dynamo_config.aws_remote_config);
@@ -163,7 +164,7 @@ exports.createNewQuestion = async (title, author, content, receiver) => {
     const Params = [title, author, content, receiver];
     const [rows] = await connection.query(Query, Params);
     connection.release();
-    return rows;
+    return;
 }
 
 exports.updateQuestion = async (questionIdx, patientIdx, title, content) => {
@@ -176,7 +177,7 @@ exports.updateQuestion = async (questionIdx, patientIdx, title, content) => {
     const Params = [title, content, questionIdx, patientIdx];
     const [rows] = await connection.query(Query, Params);
     connection.release();
-    return rows;
+    return;
 }
 
 exports.deleteQuestion = async (questionIdx, patientIdx) => {
@@ -189,5 +190,62 @@ exports.deleteQuestion = async (questionIdx, patientIdx) => {
     const Params = [questionIdx, patientIdx];
     const [rows] = await connection.query(Query, Params);
     connection.release();
+    return;
+}
+
+exports.isExistQuestion = async (questionIdx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `
+    SELECT EXISTS (SELECT * FROM board_question WHERE id = ? AND status != 'deleted') AS 'exist';
+    `;
+    const Params = [questionIdx];
+    const [rows] = await connection.query(Query, Params);
+    connection.release();
     return rows;
+}
+
+exports.countAnswer = async (questionIdx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `
+    SELECT
+    (SELECT EXISTS (SELECT * FROM board_answer WHERE questionId = ? AND \`order\` = 0)) AS doctorAnswer,
+    (SELECT count(*) FROM board_answer WHERE questionId = ?) AS \`count\`;
+    `;
+    const Params = [questionIdx, questionIdx];
+    const [rows] = await connection.query(Query, Params);
+    connection.release();
+    return rows;
+}
+
+exports.createAnswer = async (questionIdx, userIdx, title, content, countAnswer, isDoctor) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const createAnswerQuery = `
+    INSERT INTO board_answer(questionId, author, \`order\`, title, content)
+    VALUES (?, ?, ?, ?, ?);
+    `;
+    const createAnswerParams = [questionIdx, userIdx, countAnswer, title, content];
+    const readQuestionQuery = `
+    UPDATE board_question
+    SET status = 'clear'
+    WHERE id = ? AND status = 'normal';
+    `;
+    const readQuestionParams = [questionIdx];
+    if (isDoctor) {
+        try {
+            await connection.beginTransaction();
+            await connection.query(createAnswerQuery, createAnswerParams);
+            if (countAnswer === 0)
+                await connection.query(readQuestionQuery, readQuestionParams);
+            await connection.commit();
+        } catch(e) {
+            await connection.rollback();
+            logger.error(`[Dao] createAnswer - ${e}`);
+        } finally {
+            connection.release();
+        }
+    } else {
+        await connection.query(createAnswerQuery, createAnswerParams);
+        connection.release();
+    }
+    return;
 }
