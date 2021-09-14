@@ -180,14 +180,14 @@ exports.updateQuestion = async (questionIdx, patientIdx, title, content) => {
     return;
 }
 
-exports.deleteQuestion = async (questionIdx, patientIdx) => {
+exports.deleteQuestion = async (questionIdx) => {
     const connection = await pool.getConnection(async (conn) => conn);
     const Query = `
         UPDATE board_question
         SET status = 'deleted'
-        WHERE id = ? AND author = ?;
+        WHERE id = ?;
     `;
-    const Params = [questionIdx, patientIdx];
+    const Params = [questionIdx];
     const [rows] = await connection.query(Query, Params);
     connection.release();
     return;
@@ -274,3 +274,15 @@ exports.updateAnswer = async (id, title, content) => {
     return;
 }
 
+exports.deleteAnswer = async (answerIdx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `
+        UPDATE board_answer
+        SET status = 'deleted'
+        WHERE id = ?;
+    `;
+    const Params = [answerIdx];
+    const [rows] = await connection.query(Query, Params);
+    connection.release();
+    return;
+}

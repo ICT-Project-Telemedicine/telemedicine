@@ -407,7 +407,7 @@ exports.deleteQuestion = async function (req, res) {
     }
 
     try {
-        const deletedQuestion = await dao.deleteQuestion(questionIdx, patientIdx);
+        await dao.deleteQuestion(questionIdx);
         logger.info('DELETE /question');
         return res.sendStatus(200);
     } catch(e) {
@@ -429,13 +429,13 @@ exports.createAnswer = async function (req, res) {
     try {
         // 질문 유효한지 확인
         const countAnswerRow = await service.getCountAnswer(questionIdx);
-        const isDoctorAnswer = countAnswerRow.doctorAnswer;
-        const countAnswer = countAnswerRow.count;
         // 질문이 없는 경우
-        if (countAnswer < 0) {
+        if (!countAnswerRow || countAnswerRow === null) {
             logger.error("POST /answer - not exist question");
             return res.sendStatus(400);
         }
+        const isDoctorAnswer = countAnswerRow.doctorAnswer;
+        const countAnswer = countAnswerRow.count;
         // 답변 생성
         await service.addAnswer(questionIdx, userIdx, userStatus, title, content, countAnswer, isDoctorAnswer);
         logger.info('POST /answer');
@@ -475,11 +475,28 @@ exports.updateAnswer = async function (req, res) {
 
 }
 
-// exports.deleteAnswer = async function (req, res) {
-//     const userIdx = req.verifiedToken.id;
+exports.deleteAnswer = async function (req, res) {
+    const userIdx = req.verifiedToken.id;
+    const answerIdx = req.params.answerIdx;
 
-//     answerIdx
-// }
+    if (!answerIdx || Number.isNaN(answerIdx)) {
+        logger.error(`DELETE /answer - unvalid parameter`);
+        return res.sendStatus(400);
+    }
+
+    try {
+        const check = await service.deleteAnswer(userIdx, answerIdx);
+        if (!check) {
+            logger.info('DELETE /answer - unvalid request');
+            return res.sendStatus(400);
+        }
+        logger.info('DELETE /answer');
+        return res.sendStatus(200);
+    } catch(e) {
+        logger.error(`DELETE /answer - ${e}`);
+        return res.sendStatus(500);
+    }
+}
 
 exports.test = async function (req, res) {
     // dynamo 테스트 코드
