@@ -370,10 +370,11 @@ exports.createQuestion = async function (req, res) {
         const [row] = await dao.getMyDoctor(patientIdx);
         const doctorIdx = row.doctorIndex;
         await dao.createNewQuestion(title, patientIdx, content, doctorIdx);
-        res.sendStatus(200);
+        logger.info('POST /question');
+        return res.sendStatus(200);
     } catch(e) {
         logger.error(`POST /question - ${e}`);
-        res.sendStatus(500);
+        return res.sendStatus(500);
     }
 }
 
@@ -388,11 +389,11 @@ exports.updateQuestion = async function (req, res) {
 
     try {
         const updatedQuestion = await dao.updateQuestion(questionIdx, patientIdx, title, content);
-        res.json({updatedQuestion});
-
+        logger.info('PUT /question');
+        return res.sendStatus(200);
     } catch(e) {
         logger.error(`PUT /question - ${e}`);
-        res.sendStatus(500);
+        return res.sendStatus(500);
     }
 }
 
@@ -407,8 +408,8 @@ exports.deleteQuestion = async function (req, res) {
 
     try {
         const deletedQuestion = await dao.deleteQuestion(questionIdx, patientIdx);
-        res.json({deletedQuestion});
-
+        logger.info('DELETE /question');
+        return res.sendStatus(200);
     } catch(e) {
         logger.error(`DELETE /question - ${e}`);
         res.sendStatus(500);
@@ -437,26 +438,42 @@ exports.createAnswer = async function (req, res) {
         }
         // 답변 생성
         await service.addAnswer(questionIdx, userIdx, userStatus, title, content, countAnswer, isDoctorAnswer);
-        res.sendStatus(200);
+        logger.info('POST /answer');
+        return res.sendStatus(200);
     } catch(e) {
         logger.error(`POST /answer - ${e}`);
         return res.sendStatus(500);
     }
 }
 
-// exports.updateAnswer = async function (req, res) {
-//     const userIdx = req.verifiedToken.id;
-//     const {
-//         answerId,
-//         title,
-//         content
-//     } = req.body;
+exports.updateAnswer = async function (req, res) {
+    const userIdx = req.verifiedToken.id;
+    const {
+        answerId,
+        title,
+        content
+    } = req.body;
 
-//     if (!answerId || !content || Number.isNaN(answerId)) {
-//         logger.error("PUT /answer - unvalid parameter");
-//         return res.sendStatus(400);
-//     }
-// }
+    if (!answerId || !content || Number.isNaN(answerId)) {
+        logger.error("PUT /answer - unvalid parameter");
+        return res.sendStatus(400);
+    }
+
+    try {
+        // 수정
+        const check = await service.updateAnswer(answerId, userIdx, title, content);
+        if (!check) {
+            logger.info('PUT /answer - unvalid request');
+            return res.sendStatus(400);
+        }
+        logger.info('PUT /answer');
+        return res.sendStatus(200);
+    } catch(e) {
+        logger.error(`PUT /answer - ${e}`);
+        return res.sendStatus(500);
+    }
+
+}
 
 // exports.deleteAnswer = async function (req, res) {
 //     const userIdx = req.verifiedToken.id;

@@ -201,7 +201,7 @@ exports.isExistQuestion = async (questionIdx) => {
     const Params = [questionIdx];
     const [rows] = await connection.query(Query, Params);
     connection.release();
-    return rows;
+    return rows[0].exist;
 }
 
 exports.countAnswer = async (questionIdx) => {
@@ -249,3 +249,28 @@ exports.createAnswer = async (questionIdx, userIdx, title, content, countAnswer,
     }
     return;
 }
+
+exports.findAnswer = async (id) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `
+    SELECT author, title, content, createdAt, updatedAt FROM board_answer WHERE id = ? AND status = 'normal';
+    `;
+    const Params = [id];
+    const [rows] = await connection.query(Query, Params);
+    connection.release();
+    return rows[0];
+}
+
+exports.updateAnswer = async (id, title, content) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `
+    UPDATE board_answer
+    SET title = ?, content = ?
+    WHERE id = ? AND status = 'normal';
+    `;
+    const Params = [title, content, id];
+    const [rows] = await connection.query(Query, Params);
+    connection.release();
+    return;
+}
+

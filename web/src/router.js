@@ -18,7 +18,7 @@ module.exports = function(app){
     app.delete('/question/:questionIdx', auth, controller.deleteQuestion);
     
     app.post('/answer', auth, controller.createAnswer);
-    // app.put('/answer', controller.updateAnswer);
+    app.put('/answer', auth, controller.updateAnswer);
     // app.delete('/answer/:answerIdx', controller.deleteAnswer);
 
     app.get('/test', controller.test);
