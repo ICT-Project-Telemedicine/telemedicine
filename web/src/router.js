@@ -8,7 +8,7 @@ module.exports = function(app){
 
     app.get('/patient', auth, controller.patient);
     app.get('/doctor', auth, controller.doctor);
-    app.get('/patient/:patientIdx/monitor', auth, controller.patientMonitor);
+    app.get('/patient/monitor', auth, controller.patientMonitor);
     app.get('/fullData', auth, controller.getFullData);
     app.get('/questionList', auth, controller.questionList);
     app.get('/question/:questionIdx', auth, controller.questionDetail);

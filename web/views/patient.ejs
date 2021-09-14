@@ -195,7 +195,7 @@
                     <br><br>
                     <a name="goMonitor"><h2 class="title">의사 모니터링</h2></a>
                     <p class="lead">담당 의사와의 모니터링을 통해 상태를 공유하세요.</p>
-                    <div class="monitor" onclick="goMonitor(<%= patientIdx %>)">모니터링 하러가기</div>
+                    <div class="monitor" onclick="goMonitor()">모니터링 하러가기</div>
 
                     <br><br>
                     <a name="findPharmacy"><h2 class="title">주변 약국 확인하기</h2></a>
@@ -215,7 +215,7 @@
         </script>
 
         <script>
-            goMonitor = (idx) => { location.href=`/patient/<%=patientIdx%>/monitor`; }
+            goMonitor = () => { location.href=`/patient/monitor`; }
         </script>
 
         <!-- Bootstrap core JS-->

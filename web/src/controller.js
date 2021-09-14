@@ -192,7 +192,11 @@ exports.patientMonitor = async function (req, res) {
         date: currDate
     }
 
-    return res.render('patientMonitor.ejs', {patientBasicInfo, currMeasureInfo});
+    // 의사 찾기
+    const [findDoctorRow] = await dao.getMyDoctor(patientIdx);
+    const doctorIdx = findDoctorRow.doctorIndex;
+
+    return res.render('patientMonitor.ejs', {patientBasicInfo, currMeasureInfo, doctorIdx});
 }
 
 exports.doctor = async function (req, res) {
