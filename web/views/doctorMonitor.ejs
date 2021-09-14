@@ -12,6 +12,13 @@
         <link rel="stylesheet" href="/css/style.css" type="text/css">
         <link rel="stylesheet" href="/css/canvas.css" type="text/css">
         <link rel="stylesheet" href="/css/monitor.css" type="text/css">
+        <!-- JS -->
+        <script>
+            const ROOM_ID = "<%= doctorIdx %>";
+        </script>
+        <script src="https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js"></script>
+        <script src="/socket.io/socket.io.js" defer></script>
+        <script src="/js/doctor-socket.js" defer></script>
     </head>
     <body>
         <!-- Responsive navbar-->
@@ -93,9 +100,7 @@
             </div>
 
             <!-- 의사 영상 -->
-            <div class="user2Video">
-                의사 영상
-            </div>
+            <div id="doctorVideo" class="user2Video"></div>
 
             <div class="suspectedDisease">
                 <div class="exp">의심 증상</div>

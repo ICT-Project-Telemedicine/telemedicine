@@ -11,6 +11,13 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link rel="stylesheet" href="/css/style.css" type="text/css">
         <link rel="stylesheet" href="/css/monitor.css" type="text/css">
+        <!-- JS -->
+        <script>
+            const ROOM_ID = "<%= doctorIdx %>";
+        </script>
+        <script src="https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js"></script>
+        <script src="/socket.io/socket.io.js" defer></script>
+        <script src="/js/patient-socket.js" defer></script>
     </head>
     <body>
         <!-- Responsive navbar-->
@@ -30,8 +37,8 @@
         <section class="py-5">
 
             <!-- 의사 영상 -->
-            <div class="user1Video">
-                의사 영상
+            <div id="doctorVideo" class="user1Video">
+                <video id='doc' muted autoplay></video>
             </div>
 
             <!-- 환자 정보 -->
@@ -107,5 +114,11 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
         <!-- ECT Pulse Graph -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
+        <script>
+            let grid = document.getElementById('doctorVideo');
+            grid.addEventListener('click', function() {
+                document.getElementById('doc').muted != document.getElementById('doc').muted;
+            });
+        </script>
     </body>
 </html>

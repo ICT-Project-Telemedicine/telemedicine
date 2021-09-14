@@ -2,9 +2,14 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const methodOverride = require('method-override');
-var cors = require('cors');
+const cors = require('cors');
+
 module.exports = function () {
     const app = express();
+
+    const server = require('http').Server(app);
+    const io = require('socket.io')(server);
+
     app.set("view engine", "ejs");
     app.set("views", process.cwd() + "/views");
 
@@ -26,5 +31,16 @@ module.exports = function () {
     // Error Handling
     app.use(function(req, res) { res.status(404).send('잘못된 접근입니다.'); });
     
-    return app;
+    io.on("connection", socket => {
+        socket.on("join-room", (roomId, userId) => {
+            socket.join(roomId);
+            socket.to(roomId).broadcast.emit('user-connected', userId);
+    
+            socket.on('disconnect', () => {
+                socket.to(roomId).broadcast.emit('user-disconnected', userId)
+            });
+        })
+    });
+
+    return server;
 };
