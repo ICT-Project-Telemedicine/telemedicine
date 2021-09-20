@@ -384,9 +384,9 @@ exports.questionDetail = async function (req, res) {
         let month4 = ('0' + (changeDate4.getMonth() + 1)).slice(-2);
         let day4 = ('0' + changeDate4.getDate()).slice(-2);
         answer.updatedAt = year4 + '-' + month4 + '-' + day4;
-        return res.render('questionDetail.ejs', {patientName, questionDetail, answer, replyList});
+        return res.render('questionDetail.ejs', {questionIdx, patientName, questionDetail, answer, replyList});
     }
-    return res.render('questionDetail.ejs', {patientName, questionDetail});
+    return res.render('questionDetail.ejs', {questionIdx, patientName, questionDetail});
 }
 
 exports.createQuestion = async function (req, res) {

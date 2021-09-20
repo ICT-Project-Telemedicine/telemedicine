@@ -50,9 +50,16 @@ tr {
     padding-bottom: 1rem;
 }
 
-.qBtn {
+.qBtn, .aBtn {
     float: right;
     color: rgb(117, 117, 117);
+}
+
+.rBtn {
+    float: right;
+    color: rgb(117, 117, 117);
+    margin-right: 0.4rem;
+    font-size: 0.9rem;
 }
 
 .replyText {

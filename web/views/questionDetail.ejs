@@ -11,6 +11,8 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link rel="stylesheet" href="/css/style.css" type="text/css">
         <link rel="stylesheet" href="/css/question.css" type="text/css">
+        <!-- jquery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     </head>
     <body>
         <div class="backToList"><a href="/question"> 목록으로 </a></div>
@@ -21,7 +23,7 @@
                     <span> <b>작성자</b> <%= patientName %> </span>
                     <span> <b>작성일</b> <%= questionDetail.createdAt %> </span>
                     <span> <b>수정일</b> <%= questionDetail.updatedAt %> </span>
-                    <span class="qBtn" id="delete"> 삭제 </span>
+                    <span class="qBtn" id="delete" onclick="qDelete(<%= questionIdx %>)"> 삭제 </span>
                     <span class="qBtn" id="modify"> 수정 </span>
                 </div>
             </div>            
@@ -38,6 +40,8 @@
                         <span><b> 작성자 </b> <%= answer.name %> </span>
                         <span><b> 작성일 </b> <%= answer.createdAt %> </span>
                         <span><b> 수정일 </b> <%= answer.updatedAt %> </span>
+                        <span class="aBtn" id="delete"> 삭제 </span>
+                        <span class="aBtn" id="modify"> 수정 </span>
                     </div>
                 </div>            
                 <div class="aContent"><%= answer.content %></div>
@@ -48,15 +52,32 @@
                             <span> └ </span>
                             <span><b> <%= element.name %> </b></span>
                             <span> <%= element.content %> </span>
+                            <span class="rBtn" id="delete"> 삭제 </span>
+                            <span class="rBtn" id="delete"> 수정 </span>
                         </div>
                     <% }) %>
                 </div>
                 <form class="writeComment">
                     <br><b> <%= patientName %> </b></br>
-                    <textarea style="margin-top: 0.3rem; padding: 0.2rem; font-size: 0.9rem;" cols="85" rows="2" placeholder="댓글"></textarea>
+                    <textarea style="margin-top: 0.3rem; padding: 0.2rem; font-size: 0.9rem;" cols="98" rows="2" placeholder="댓글"></textarea>
+                    <button type="submit">입력</button>
                 </form>
             </div>
         <% } %>
         
+        <script>
+            qDelete = (idx) => {
+                if (confirm("질문을 삭제하시겠습니까?")) {
+                    $.ajax({
+                        url: `/question/${idx}`,
+                        method: "delete",
+                        dataType: "json"
+                    })
+                    alert('삭제되었습니다.');
+                    location.href = "/question"
+                }
+            }
+        </script>
+
     </body>
 </html>
