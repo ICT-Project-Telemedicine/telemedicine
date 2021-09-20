@@ -8,7 +8,7 @@ module.exports = function(app){
 
     app.get('/patient', auth, controller.patient);
     app.get('/doctor', auth, controller.doctor);
-    app.get('/patient/:patientIdx/monitor', auth, controller.patientMonitor);
+    app.get('/patient/monitor', auth, controller.patientMonitor);
     app.get('/fullData', auth, controller.getFullData);
 
     app.get('/question', auth, controller.questionList);
@@ -16,7 +16,10 @@ module.exports = function(app){
     app.post('/question', auth, controller.createQuestion);
     app.put('/question', auth, controller.updateQuestion);
     app.delete('/question/:questionIdx', auth, controller.deleteQuestion);
-    // app.post('/answer', auth, controller.createAnswer);
+    
+    app.post('/answer', auth, controller.createAnswer);
+    app.put('/answer', auth, controller.updateAnswer);
+    app.delete('/answer/:answerIdx', auth, controller.deleteAnswer);
 
     app.get('/test', controller.test);
 };
