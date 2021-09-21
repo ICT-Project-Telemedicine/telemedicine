@@ -10,8 +10,8 @@
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link rel="stylesheet" href="/css/style.css" type="text/css">
-        <link rel="stylesheet" href="/css/canvas.css" type="text/css">
         <link rel="stylesheet" href="/css/monitor.css" type="text/css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     </head>
     <body>
         <!-- Responsive navbar-->
@@ -90,6 +90,14 @@
                     </tr>
                 </table>
                 <div class="getFullData" onclick="fullDataModal(<%= patientBasicInfo.patientIdx %>)">전체 의료 기록 조회하기</div>
+            
+                 <!-- 녹화 시작 -->
+                <div style="text-align: center">
+                    <button id="startBtn"  onclick="startRecord()">진료 녹화 시작</button>
+                    <button id="stopBtn" style="display:none" onclick="stopScreen()">진료 녹화 종료</button>
+                    <button id="saveBtn" style="display:none" onclick="saveStream()">진료 영상 저장</button>
+                </div>
+                <!-- 녹화 끝 -->
             </div>
 
             <!-- 의사 영상 -->
@@ -132,5 +140,6 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
         <!-- ECT Pulse Graph -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
+        <script src="/js/record.js"></script>
     </body>
 </html>
