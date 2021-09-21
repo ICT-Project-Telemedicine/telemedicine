@@ -298,3 +298,11 @@ exports.deleteAnswer = async (answerIdx) => {
     connection.release();
     return;
 }
+
+exports.userInfo = async (userIdx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `SELECT info FROM user WHERE userIndex = ${userIdx};`;
+    const [rows] = await connection.query(Query);
+    connection.release();
+    return rows;
+}

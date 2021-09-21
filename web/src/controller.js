@@ -531,6 +531,17 @@ exports.deleteAnswer = async function (req, res) {
     }
 }
 
+exports.modify = async function (req, res) {
+    const userIdx = req.verifiedToken.id;
+    const postIdx = req.params.postIdx;
+
+    // 질문(환자) 수정인지 답변(의사) 수정인지 확인 (환자 0 / 의사 1)
+    const [rows] = await dao.userInfo(userIdx);
+    const info = rows.info;
+
+    return res.render('modify.ejs', {postIdx, info});
+}
+
 exports.saveVideoStream = async function (req, res) {
     upload(req, res, function(err) {
         if (err) {

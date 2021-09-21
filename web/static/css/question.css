@@ -89,3 +89,8 @@ tr {
     margin-right: 1.5rem;
     font-size: 0.9rem;
 }
+
+.modifyTitle {
+    text-align: center;
+    margin: 5rem 0 2rem 0;
+}

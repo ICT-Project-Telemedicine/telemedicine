@@ -190,7 +190,7 @@
                         <textarea id="qContent" style="margin: 0.5rem 5rem; padding: 0.4rem;" cols="90" rows="6" placeholder="질문 내용"></textarea>
                         <input type="submit" style="margin-left: 5rem; width: 752px" onclick="qAdd()">
                     </form>
-                    <div class="monitor" onclick="questionList(<%= patientIdx %>)">질문 목록 확인하기</div>
+                    <div class="monitor" onclick="questionList()">질문 목록 확인하기</div>
 
                     <br><br>
                     <a name="goMonitor"><h2 class="title">의사 모니터링</h2></a>
@@ -208,8 +208,8 @@
         </section>
 
         <script>
-            questionList = (idx) => {
-                window.open('/question', "haha", "width=800, height=800");
+            questionList = () => {
+                window.open('/question', "question", "width=800, height=800");
             }
         </script>
 
@@ -229,7 +229,7 @@
                     method: "post",
                     data: formData
                 })
-                window.open("/question", "haha", "width=800, height=800");
+                window.open("/question", "question", "width=800, height=800");
             }
         </script>
 
