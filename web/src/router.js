@@ -21,5 +21,7 @@ module.exports = function(app){
     app.put('/answer', auth, controller.updateAnswer);
     app.delete('/answer/:answerIdx', auth, controller.deleteAnswer);
 
+    app.post('/record', controller.saveVideoStream);
+
     app.get('/test', controller.test);
 };

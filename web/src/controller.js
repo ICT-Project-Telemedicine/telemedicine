@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const dynamodb = require('../config/dynamodb');
 const {logger} = require('../config/logger');
+const upload = require('../config/multer');
 const dao = require('./dao');
 const service = require('./service');
 const calculate = require('./calculate');
@@ -528,6 +529,15 @@ exports.deleteAnswer = async function (req, res) {
         logger.error(`DELETE /answer - ${e}`);
         return res.sendStatus(500);
     }
+}
+
+exports.saveVideoStream = async function (req, res) {
+    upload(req, res, function(err) {
+        if (err) {
+            return res.sendStatus(500);
+        }
+        return res.sendStatus(200);
+    });
 }
 
 exports.test = async function (req, res) {
