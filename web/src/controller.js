@@ -359,18 +359,6 @@ exports.questionDetail = async function (req, res) {
     let month2 = ('0' + (changeDate2.getMonth() + 1)).slice(-2);
     let day2 = ('0' + changeDate2.getDate()).slice(-2);
     questionDetail.updatedAt = year2 + '-' + month2 + '-' + day2;
-
-    // 예시
-    const replyList = [
-        {
-            "name": "한이음",
-            "content": "답변 도움이 되었습니다. 감사합니다."
-        },
-        {
-            "name": "홍지후",
-            "content": "다행이네요. 모니터링 한 번 합시다."
-        }
-    ]
     
     // 의사 답변 있는 경우 답변 조회
     if (questionDetail.status === 'clear') {
@@ -385,9 +373,13 @@ exports.questionDetail = async function (req, res) {
         let month4 = ('0' + (changeDate4.getMonth() + 1)).slice(-2);
         let day4 = ('0' + changeDate4.getDate()).slice(-2);
         answer.updatedAt = year4 + '-' + month4 + '-' + day4;
-        return res.render('questionDetail.ejs', {questionIdx, patientName, questionDetail, answer, replyList});
+
+        // 답변 댓글 조회
+        const replyList = await dao.getReply(questionIdx);
+
+        return res.render('questionDetail.ejs', {patientIdx, questionIdx, patientName, questionDetail, answer, replyList});
     }
-    return res.render('questionDetail.ejs', {questionIdx, patientName, questionDetail});
+    return res.render('questionDetail.ejs', {patientIdx, questionIdx, patientName, questionDetail});
 }
 
 exports.createQuestion = async function (req, res) {

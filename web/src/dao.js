@@ -161,13 +161,33 @@ exports.getQuestionDetail = async (questionIdx) => {
 exports.getAnswer = async (questionIdx) => {
     const connection = await pool.getConnection(async (conn) => conn);
     const Query = `
-        SELECT title, content, createdAt, updatedAt, status,
-        (SELECT name FROM user INNER JOIN board_answer ON board_answer.author = user.userIndex) AS name
-        FROM board_answer WHERE questionId = ${questionIdx};
+    SELECT author, id, title, content, createdAt, updatedAt, status,
+    (SELECT name FROM user INNER JOIN board_answer b ON b.author = user.userIndex AND b.order = 0) AS name
+    FROM board_answer ba WHERE ba.questionId = ${questionIdx} AND ba.order = 0;
     `;
     const [rows] = await connection.query(Query);
     connection.release();
     return rows;
+}
+
+exports.getReply = async (questionIdx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `
+    SELECT GROUP_CONCAT(id) AS replyIdx, GROUP_CONCAT(author) AS authorIdx, (
+    SELECT GROUP_CONCAT(name) FROM user INNER JOIN board_answer b ON b.author = user.userIndex AND b.order != 0 AND b.status != 'deleted') AS name,
+    GROUP_CONCAT(content) AS content FROM board_answer ba WHERE ba.questionId = ${questionIdx} AND ba.order != 0 AND ba.status != 'deleted';
+    `;
+    const [rows] = await connection.query(Query);
+    connection.release();
+    const replyIdx = rows[0].replyIdx.split(',');
+    const authorIdx = rows[0].authorIdx.split(',');
+    const name = rows[0].name.split(',');
+    const content = rows[0].content.split(',');
+    const replyList = [];
+    for (var i=0; i<name.length; i++) {
+        replyList.push({"replyIdx": Number(replyIdx[i]), "authorIdx": Number(authorIdx[i]), "name": name[i], "content": content[i]})
+    }
+    return replyList;
 }
 
 exports.createNewQuestion = async (title, author, content, receiver) => {
