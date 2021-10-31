@@ -38,6 +38,14 @@ exports.getUserIndex = async (id, info) => {
     return rows[0].userIndex
 }
 
+exports.getUserInfo = async (idx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `SELECT info FROM user WHERE userIndex = ${idx};`;
+    const [rows] = await connection.query(Query);
+    connection.release();
+    return rows[0].info;
+}
+
 exports.getPatientName = async (idx) => {
     const connection = await pool.getConnection(async (conn) => conn);
     const getPatientNameQuery = `SELECT name FROM user WHERE userIndex = ${idx}`;
@@ -322,6 +330,17 @@ exports.deleteAnswer = async (answerIdx) => {
 exports.userInfo = async (userIdx) => {
     const connection = await pool.getConnection(async (conn) => conn);
     const Query = `SELECT info FROM user WHERE userIndex = ${userIdx};`;
+    const [rows] = await connection.query(Query);
+    connection.release();
+    return rows;
+}
+
+exports.getPatientQuestionList = async (idx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `
+        SELECT bq.id, (SELECT name FROM user u WHERE u.userIndex = bq.author) AS name, bq.title, bq.createdAt, bq.status
+        FROM board_question bq WHERE receiver = ${idx} AND status != 'deleted';
+    `;
     const [rows] = await connection.query(Query);
     connection.release();
     return rows;

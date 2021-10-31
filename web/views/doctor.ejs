@@ -146,11 +146,22 @@
                                 <div class="patientMonitor" onclick="patientDetail(<%= element.userIndex %>)"><b><%= element.name %> 환자</b> 모니터링 하러가기</div>
                             </div>
                         <% }); %>
-                        
+
+                        <br><br>
+                        <h2 class="title">질문 목록</h2>
+                        <p class="lead">담당 환자가 남긴 질문을 확인하세요.</p>
+                        <div class="monitor" onclick="questionList()">질문 목록 확인하기</div>
+
                         <script>
                             patientDetail = (idx) => {
                                 console.log('plz;;', idx);
                                 location.href=`/doctor?patient=${idx}`;
+                            }
+                        </script>
+
+                        <script>
+                            questionList = () => {
+                                window.open('/question', "question", "width=800, height=800");
                             }
                         </script>
                     </div>
