@@ -345,3 +345,25 @@ exports.getPatientQuestionList = async (idx) => {
     connection.release();
     return rows;
 }
+
+exports.getPatientBasicInfoForPrescription = async (idx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `
+    SELECT name, regNum FROM user WHERE userIndex = ${idx}
+    `;
+    const [rows] = await connection.query(Query);
+    connection.release();
+    return rows;
+}
+
+exports.getHospitalByDoctorId = async (doctorId) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `
+    SELECT name, tel, fax, email, type, docNum
+    FROM hospital
+    WHERE user_id = ${doctorId};
+    `;
+    const [rows] = await connection.query(Query);
+    connection.release();
+    return rows;
+}

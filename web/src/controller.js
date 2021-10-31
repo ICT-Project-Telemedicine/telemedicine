@@ -558,6 +558,14 @@ exports.saveVideoStream = async function (req, res) {
     });
 }
 
+exports.getPrescription = async function (req, res) {
+    const patientIdx = req.query.patient;
+    const doctorIdx = req.verifiedToken.id;
+    const [userInfo] = await dao.getPatientBasicInfoForPrescription(patientIdx);
+    const [docInfo] = await dao.getHospitalByDoctorId(doctorIdx);
+    return res.render('prescription.ejs', {userInfo, docInfo});
+}
+
 exports.test = async function (req, res) {
     // dynamo 테스트 코드
     const items = await dao.findAll();
