@@ -327,14 +327,6 @@ exports.deleteAnswer = async (answerIdx) => {
     return;
 }
 
-exports.userInfo = async (userIdx) => {
-    const connection = await pool.getConnection(async (conn) => conn);
-    const Query = `SELECT info FROM user WHERE userIndex = ${userIdx};`;
-    const [rows] = await connection.query(Query);
-    connection.release();
-    return rows;
-}
-
 exports.getPatientQuestionList = async (idx) => {
     const connection = await pool.getConnection(async (conn) => conn);
     const Query = `

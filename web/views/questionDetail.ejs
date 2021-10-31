@@ -23,8 +23,13 @@
                     <span> <b>작성자</b> <%= patientName %> </span>
                     <span> <b>작성일</b> <%= questionDetail.createdAt %> </span>
                     <span> <b>수정일</b> <%= questionDetail.updatedAt %> </span>
-                    <span class="qBtn" id="delete" onclick="qDelete(<%= questionIdx %>)"> 삭제 </span>
-                    <span class="qBtn" id="modify" onclick="qModify(<%= questionIdx %>)"> 수정 </span>
+                    <% if (userInfo === 0) { %>
+                        <span class="qBtn" id="delete" onclick="qDelete(<%= questionIdx %>)"> 삭제 </span>
+                        <span class="qBtn" id="modify" onclick="qModify(<%= questionIdx %>)"> 수정 </span>
+                    <% } else { %>
+                        <span class="wAnswer" id="answer" onclick="wAnswer(<%= questionIdx %>)"> 답변 달기 </span>
+                    <% } %>
+
                 </div>
             </div>            
             <div class="qContent"><%= questionDetail.content %></div>
@@ -40,7 +45,7 @@
                         <span><b> 작성자 </b> <%= answer.name %> </span>
                         <span><b> 작성일 </b> <%= answer.createdAt %> </span>
                         <span><b> 수정일 </b> <%= answer.updatedAt %> </span>
-                        <% if (answer.author === patientIdx) { %>
+                        <% if (answer.author === userIdx) { %>
                             <span class="aBtn" id="delete"> 삭제 </span>
                             <span class="aBtn" id="modify"> 수정 </span>
                         <% } %>
@@ -54,7 +59,7 @@
                             <span> └ </span>
                             <span><b> <%= element.name %> </b></span>
                             <span> <%= element.content %> </span>
-                            <% if (element.authorIdx === patientIdx) { %>
+                            <% if (element.authorIdx === userIdx) { %>
                                 <span class="rBtn" id="delete" onclick="rDelete(<%= element.replyIdx %>)"> 삭제 </span>
                                 <span class="rBtn" id="delete" onclick="rModify(<%= element.replyIdx %>"> 수정 </span>
                             <% } %>

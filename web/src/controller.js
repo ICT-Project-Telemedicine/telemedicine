@@ -354,14 +354,13 @@ exports.questionList = async function (req, res) {
         })
         return res.render('questionList.ejs', {info, patientName, questionList})
     }
-
-
 }
 
 exports.questionDetail = async function (req, res) {
     const questionIdx = req.params.questionIdx;
-    const patientIdx = req.verifiedToken.id;
-    const patientName = await dao.getPatientName(patientIdx);
+    const userIdx = req.verifiedToken.id;
+    const userInfo = await dao.getUserInfo(userIdx);
+    const patientName = req.query.name;
     const [questionDetail] = await dao.getQuestionDetail(questionIdx);
 
     let changeDate = new Date(Number(questionDetail.createdAt));
@@ -392,9 +391,9 @@ exports.questionDetail = async function (req, res) {
         // 답변 댓글 조회
         const replyList = await dao.getReply(questionIdx);
 
-        return res.render('questionDetail.ejs', {patientIdx, questionIdx, patientName, questionDetail, answer, replyList});
+        return res.render('questionDetail.ejs', {userIdx, userInfo, questionIdx, patientName, questionDetail, answer, replyList});
     }
-    return res.render('questionDetail.ejs', {patientIdx, questionIdx, patientName, questionDetail});
+    return res.render('questionDetail.ejs', {userIdx, userInfo, questionIdx, patientName, questionDetail});
 }
 
 exports.createQuestion = async function (req, res) {
@@ -543,8 +542,7 @@ exports.modify = async function (req, res) {
     const postIdx = req.params.postIdx;
 
     // 질문(환자) 수정인지 답변(의사) 수정인지 확인 (환자 0 / 의사 1)
-    const [rows] = await dao.userInfo(userIdx);
-    const info = rows.info;
+    const info = await dao.getUserInfo(userIdx);
 
     return res.render('modify.ejs', {postIdx, info});
 }

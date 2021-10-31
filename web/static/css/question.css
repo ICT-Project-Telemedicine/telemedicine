@@ -50,7 +50,7 @@ tr {
     padding-bottom: 1rem;
 }
 
-.qBtn, .aBtn {
+.qBtn, .aBtn, .wAnswer {
     float: right;
     color: rgb(117, 117, 117);
 }
