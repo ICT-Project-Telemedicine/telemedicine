@@ -169,9 +169,9 @@ exports.getQuestionDetail = async (questionIdx) => {
 exports.getAnswer = async (questionIdx) => {
     const connection = await pool.getConnection(async (conn) => conn);
     const Query = `
-    SELECT author, id, title, content, createdAt, updatedAt, status,
-    (SELECT name FROM user INNER JOIN board_answer b ON b.author = user.userIndex AND b.order = 0) AS name
-    FROM board_answer ba WHERE ba.questionId = ${questionIdx} AND ba.order = 0;
+        SELECT author, id, title, content, createdAt, updatedAt, status,
+        (SELECT name FROM user INNER JOIN board_answer b ON b.author = user.userIndex AND b.questionId = ${questionIdx} AND b.order = 0 AND b.status != 'deleted') AS name
+        FROM board_answer ba WHERE ba.questionId = ${questionIdx} AND ba.order = 0 AND ba.status != 'deleted';
     `;
     const [rows] = await connection.query(Query);
     connection.release();
@@ -182,20 +182,24 @@ exports.getReply = async (questionIdx) => {
     const connection = await pool.getConnection(async (conn) => conn);
     const Query = `
     SELECT GROUP_CONCAT(id) AS replyIdx, GROUP_CONCAT(author) AS authorIdx, (
-    SELECT GROUP_CONCAT(name) FROM user INNER JOIN board_answer b ON b.author = user.userIndex AND b.order != 0 AND b.status != 'deleted') AS name,
+    SELECT GROUP_CONCAT(name) FROM user INNER JOIN board_answer b ON b.author = user.userIndex AND b.questionId = ${questionIdx} AND b.order != 0 AND b.status != 'deleted') AS name,
     GROUP_CONCAT(content) AS content FROM board_answer ba WHERE ba.questionId = ${questionIdx} AND ba.order != 0 AND ba.status != 'deleted';
     `;
     const [rows] = await connection.query(Query);
     connection.release();
-    const replyIdx = rows[0].replyIdx.split(',');
-    const authorIdx = rows[0].authorIdx.split(',');
-    const name = rows[0].name.split(',');
-    const content = rows[0].content.split(',');
-    const replyList = [];
-    for (var i=0; i<name.length; i++) {
-        replyList.push({"replyIdx": Number(replyIdx[i]), "authorIdx": Number(authorIdx[i]), "name": name[i], "content": content[i]})
+    if (rows[0].replyIdx === null) {
+        return [];
+    } else {
+        const replyIdx = rows[0].replyIdx.split(',');
+        const authorIdx = rows[0].authorIdx.split(',');
+        const name = rows[0].name.split(',');
+        const content = rows[0].content.split(',');
+        const replyList = [];
+        for (var i=0; i<name.length; i++) {
+            replyList.push({"replyIdx": Number(replyIdx[i]), "authorIdx": Number(authorIdx[i]), "name": name[i], "content": content[i]})
+        }
+        return replyList;
     }
-    return replyList;
 }
 
 exports.createNewQuestion = async (title, author, content, receiver) => {
@@ -260,14 +264,15 @@ exports.countAnswer = async (questionIdx) => {
 exports.createAnswer = async (questionIdx, userIdx, title, content, countAnswer, isDoctor) => {
     const connection = await pool.getConnection(async (conn) => conn);
     const createAnswerQuery = `
-    INSERT INTO board_answer(questionId, author, \`order\`, title, content)
-    VALUES (?, ?, ?, ?, ?);
+        INSERT INTO board_answer(questionId, author, \`order\`, title, content)
+        VALUES (?, ?, ?, ?, ?);
     `;
+
     const createAnswerParams = [questionIdx, userIdx, countAnswer, title, content];
     const readQuestionQuery = `
-    UPDATE board_question
-    SET status = 'clear'
-    WHERE id = ? AND status = 'normal';
+        UPDATE board_question
+        SET status = 'clear'
+        WHERE id = ? AND status = 'normal';
     `;
     const readQuestionParams = [questionIdx];
     if (isDoctor) {
@@ -327,14 +332,6 @@ exports.deleteAnswer = async (answerIdx) => {
     return;
 }
 
-exports.userInfo = async (userIdx) => {
-    const connection = await pool.getConnection(async (conn) => conn);
-    const Query = `SELECT info FROM user WHERE userIndex = ${userIdx};`;
-    const [rows] = await connection.query(Query);
-    connection.release();
-    return rows;
-}
-
 exports.getPatientQuestionList = async (idx) => {
     const connection = await pool.getConnection(async (conn) => conn);
     const Query = `
@@ -366,4 +363,39 @@ exports.getHospitalByDoctorId = async (doctorId) => {
     const [rows] = await connection.query(Query);
     connection.release();
     return rows;
+=======
+exports.isFirst = async (idx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `SELECT ba.order AS first FROM board_answer ba WHERE id = ${idx};`;
+    const [rows] = await connection.query(Query);
+    connection.release();
+    return rows[0].first;
+}
+
+exports.isFirstDeleted = async (idx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `SELECT ba.status AS isDeleted FROM board_answer ba WHERE ba.questionId = ${idx} AND ba.order = 0 ORDER BY ba.status DESC LIMIT 1;`;
+    const [rows] = await connection.query(Query);
+    connection.release();
+    if (rows.length === 0) return 'normal';
+    else {
+        return rows[0].isDeleted;
+    }
+}
+
+exports.getQuestionIdFromAnswer = async (idx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `SELECT questionId FROM board_answer WHERE id = ${idx};`;
+    const [rows] = await connection.query(Query);
+    connection.release();
+    return rows[0].questionId;
+}
+
+exports.updateQuestionStatus = async (idx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `UPDATE board_question SET status = 'normal' WHERE id = ${idx};`;
+    const [rows] = await connection.query(Query);
+    connection.release();
+    console.log('rows >', rows);
+    return;
 }

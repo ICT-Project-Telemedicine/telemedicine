@@ -41,16 +41,16 @@ tr {
     padding-right: 0.5rem;
 }
 
-.qContent, .aContent {
+.qContent, .aContent1, .aContent2 {
     font-size: 1.2rem;
 }
 
-.aContent {
+.aContent2 {
     border-bottom: 1px solid #ccc;
     padding-bottom: 1rem;
 }
 
-.qBtn, .aBtn {
+.qBtn, .aBtn, .wAnswer {
     float: right;
     color: rgb(117, 117, 117);
 }
