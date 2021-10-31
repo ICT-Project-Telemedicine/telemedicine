@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>MediDoc</title>
+    <style type="text/css">
+      .tg  {border-collapse:collapse;border-spacing:0;}
+      .tg td{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+        overflow:hidden;padding:10px 5px;word-break:normal;}
+      .tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:14px;
+        font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+      .tg .tg-91w8{border-color:inherit;font-size:10px;text-align:center;vertical-align:top}
+      .tg .tg-l6li{border-color:inherit;font-size:10px;text-align:left;vertical-align:top}
+      .tg .tg-7jts{border-color:inherit;font-size:18px;text-align:center;vertical-align:top}
+      .tg .tg-ai0l{border-color:inherit;font-size:12px;font-weight:bold;text-align:center;vertical-align:top}
+      .tg .tg-jpc1{font-size:10px;text-align:left;vertical-align:top}
+    </style>
+    <script type = "text/javascript" src = "http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type = "text/javascript" src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script type = "text/javascript" src = "https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  </head>
+  <body>
+    <div id="content">
+      <table class="tg">
+        <thead>
+          <tr>
+            <th class="tg-7jts" colspan="20">처&nbsp;&nbsp;&nbsp;&nbsp;방&nbsp;&nbsp;&nbsp;&nbsp;전<br><br></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tg-l6li" colspan="20">(1) 의료보험 (2) 의료보호 (3) 산재보험 (4) 자동차보험 (5) 기타(&nbsp;&nbsp;&nbsp;) 요양기관기호 :</td>
+          </tr>
+          <tr>
+            <td class="tg-91w8" colspan="4">교부 연월일<br>및 번호<br>(년&nbsp;&nbsp;월 일 - 제 호)</td>
+            <td class="tg-l6li" colspan="6"><span><input maxlength=25 size=25><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" rowspan="4"><br><br><br>의<br><br>료<br><br>기<br><br>관</td>
+            <td class="tg-91w8" colspan="3">명&nbsp;&nbsp;칭</td>
+            <td class="tg-l6li" colspan="6"><%= docInfo.name %></td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" rowspan="3"><br><br><br>환<br><br>자</td>
+            <td class="tg-l6li" colspan="3" rowspan="2"><br><br>성 명<br></td>
+            <td class="tg-l6li" colspan="6" rowspan="2"><%= userInfo.name %></td>
+            <td class="tg-91w8" colspan="3">전화번호</td>
+            <td class="tg-l6li" colspan="6"><%= docInfo.tel %></td>
+          </tr>
+          <tr>
+            <td class="tg-91w8" colspan="3">팩스번호</td>
+            <td class="tg-l6li" colspan="6"><%= docInfo.fax %></td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="3">주민등록번호</td>
+            <td class="tg-l6li" colspan="6"><%= userInfo.regNum %></td>
+            <td class="tg-91w8" colspan="3">e-mail 주소</td>
+            <td class="tg-l6li" colspan="6"><%= docInfo.email %></td>
+          </tr>
+          <tr>
+            <td class="tg-91w8" colspan="2" rowspan="2"><br>질병<br>분류<br>기호</td>
+            <td class="tg-l6li"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-91w8" colspan="2" rowspan="2"><br>처       방<br>의료인의<br>성       명</td>
+            <td class="tg-91w8" colspan="5" rowspan="2"><br><br>(서명 또는 날인)</td>
+            <td class="tg-l6li" colspan="2">면허종별</td>
+            <td class="tg-l6li" colspan="4"><%= docInfo.type %></td>
+          </tr>
+          <tr>
+            <td class="tg-91w8"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-91w8"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-91w8"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-91w8"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-91w8"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2">면허번호</td>
+            <td class="tg-91w8" colspan="4">제  <%= docInfo.docNum %> 호</td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="20">* 환자의 요구가 있는 때에는 질병분류기호를 기재하지 아니합니다.</td>
+          </tr>
+          <tr>
+            <td class="tg-91w8" colspan="10">처방 의약품의 명칭</td>
+            <td class="tg-91w8" colspan="2">1회<br>투약량</td>
+            <td class="tg-91w8" colspan="2">1일 <br>투여 횟수</td>
+            <td class="tg-91w8" colspan="2">총<br>투약일수</td>
+            <td class="tg-91w8" colspan="4">용       법<br></td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="10"><span><input maxlength=50 size=50><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="4" rowspan="9">매식(전,간,후) 시 분복용</td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="10"><span><input maxlength=50 size=50><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="10"><span><input maxlength=50 size=50><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="10"><span><input maxlength=50 size=50><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="10"><span><input maxlength=50 size=50><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="10"><span><input maxlength=50 size=50><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="10"><span><input maxlength=50 size=50><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="10"><span><input maxlength=50 size=50><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="10"><span><input maxlength=50 size=50><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="10"><span><input maxlength=50 size=50><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-91w8" colspan="4">조제 시 참고사항</td>
+          </tr>
+          <tr>
+            <td class="tg-91w8" colspan="16">주사제 처방 내역 ( 원내조제 □ ,&nbsp;&nbsp;원외처방 □ )</td>
+            <td class="tg-l6li" colspan="4" rowspan="5"></td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="10"><span><input maxlength=50 size=50><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="10"><span><input maxlength=50 size=50><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="10"><span><input maxlength=50 size=50><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="10"><span><input maxlength=50 size=50><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="2">사용기간</td>
+            <td class="tg-l6li" colspan="4">교부일로부터</td>
+            <td class="tg-l6li" colspan="2"><span><input maxlength=1 size=1><p style="display: none;"></p></span></td>
+            <td class="tg-l6li" colspan="2">일간</td>
+            <td class="tg-l6li" colspan="10">사용기간 내에 약국에 제출하여야 합니다.</td>
+          </tr>
+          <tr>
+            <td class="tg-ai0l" colspan="20">의&nbsp;&nbsp;약&nbsp;&nbsp;품&nbsp;&nbsp;&nbsp;&nbsp;조&nbsp;&nbsp;제&nbsp;&nbsp;내&nbsp;&nbsp;역</td>
+          </tr>
+          <tr>
+            <td class="tg-91w8" colspan="2" rowspan="4"><br><br><br><br><br>조제<br>내역</td>
+            <td class="tg-l6li" colspan="3">조제기관의<br>명칭</td>
+            <td class="tg-l6li" colspan="9"></td>
+            <td class="tg-l6li" colspan="6">처방의 변경 · 수정 · 확인 ·<br>대체시 그 내용 등</td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="3">조제약사</td>
+            <td class="tg-l6li" colspan="2">성명</td>
+            <td class="tg-91w8" colspan="7">(서명 또는 날인)</td>
+            <td class="tg-l6li" colspan="6" rowspan="3"></td>
+          </tr>
+          <tr>
+            <td class="tg-l6li" colspan="3">조 제 량<br>(조제일수)</td>
+            <td class="tg-l6li" colspan="9"></td>
+          </tr>
+          <tr>
+            <td class="tg-jpc1" colspan="3">조제연월일</td>
+            <td class="tg-jpc1" colspan="9"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <br/>
+    <button id="btn1" onclick="completeEdit()">수정 완료</button>
+    <button id="btn2" onclick="doEdit()" style="display: none;" >수정하기</button>
+    <button id="btn3" onclick="save()" style="display: none;">다운로드</button>
+  </body>
+
+  <script>
+    doEdit = () => {
+      document.querySelectorAll('span').forEach(span => {
+        p = span.lastChild
+        p.style.display = "none";
+        input = span.firstChild;
+        input.value = p.textContent
+        input.style.display = "";
+       
+      });
+      document.getElementById("btn1").style.display = "";
+      document.getElementById("btn2").style.display = "none";
+      document.getElementById("btn3").style.display = "none";
+    };
+
+    completeEdit = () => {
+      document.querySelectorAll('span').forEach(span => {
+        input = span.firstChild;
+        input.style.display = "none";
+        p = span.lastChild
+        p.textContent = input.value;
+        p.style.display = "";
+      });
+      document.getElementById("btn1").style.display = "none";
+      document.getElementById("btn2").style.display = "";
+      document.getElementById("btn3").style.display = "";
+    };
+
+    save = () => {
+      document.getElementById("btn3").style.display = "none";
+      html2canvas($('#content')[0]).then(function(canvas) {
+        var doc = new jsPDF('p', 'mm', 'a1');
+        var imgData = canvas.toDataURL('image/png');
+        doc.addImage(imgData, 'PNG', 0, 0);
+        doc.save('prescript.pdf');
+      });
+      document.getElementById("btn3").style.display = "";
+    }
+  </script>
+</html>
+
+    
