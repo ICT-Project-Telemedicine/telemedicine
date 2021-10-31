@@ -55,7 +55,7 @@
                         <span><b> 작성일 </b> <%= answer.createdAt %> </span>
                         <span><b> 수정일 </b> <%= answer.updatedAt %> </span>
                         <% if (answer.author === userIdx) { %>
-                            <span class="aBtn" id="delete"> 삭제 </span>
+                            <span class="aBtn" id="delete" onclick="rDelete(<%= answer.id %>)"> 삭제 </span>
                             <span class="aBtn" id="modify"> 수정 </span>
                         <% } %>
                     </div>
@@ -69,7 +69,7 @@
                             <span><b> <%= element.name %> </b></span>
                             <span> <%= element.content %> </span>
                             <% if (element.authorIdx === userIdx) { %>
-                                <span class="rBtn" id="delete" onclick="rDelete(<%= element.replyIdx %>)"> 삭제 </span>
+                                <span class="rBtn" id="delete" onclick="rDelete2(<%= element.replyIdx %>)"> 삭제 </span>
                                 <span class="rBtn" id="delete" onclick="rModify(<%= element.replyIdx %>"> 수정 </span>
                             <% } %>
                         </div>
@@ -135,6 +135,20 @@
 
         <script>
             rDelete = (idx) => {
+                if (confirm("답변을 삭제하시겠습니까?")) {
+                    $.ajax({
+                         url: `/answer/${idx}`,
+                         method: "delete",
+                         dataType: "json"
+                    })
+                    alert('삭제되었습니다.');
+                    window.location.reload();
+                }
+            }
+        </script>
+
+        <script>
+            rDelete2 = (idx) => {
                 if (confirm("댓글을 삭제하시겠습니까?")) {
                     $.ajax({
                         url: `/answer/${idx}`,

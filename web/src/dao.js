@@ -264,14 +264,15 @@ exports.countAnswer = async (questionIdx) => {
 exports.createAnswer = async (questionIdx, userIdx, title, content, countAnswer, isDoctor) => {
     const connection = await pool.getConnection(async (conn) => conn);
     const createAnswerQuery = `
-    INSERT INTO board_answer(questionId, author, \`order\`, title, content)
-    VALUES (?, ?, ?, ?, ?);
+        INSERT INTO board_answer(questionId, author, \`order\`, title, content)
+        VALUES (?, ?, ?, ?, ?);
     `;
+
     const createAnswerParams = [questionIdx, userIdx, countAnswer, title, content];
     const readQuestionQuery = `
-    UPDATE board_question
-    SET status = 'clear'
-    WHERE id = ? AND status = 'normal';
+        UPDATE board_question
+        SET status = 'clear'
+        WHERE id = ? AND status = 'normal';
     `;
     const readQuestionParams = [questionIdx];
     if (isDoctor) {
@@ -340,4 +341,40 @@ exports.getPatientQuestionList = async (idx) => {
     const [rows] = await connection.query(Query);
     connection.release();
     return rows;
+}
+
+exports.isFirst = async (idx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `SELECT ba.order AS first FROM board_answer ba WHERE id = ${idx};`;
+    const [rows] = await connection.query(Query);
+    connection.release();
+    return rows[0].first;
+}
+
+exports.isFirstDeleted = async (idx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `SELECT ba.status AS isDeleted FROM board_answer ba WHERE ba.questionId = ${idx} AND ba.order = 0 ORDER BY ba.status DESC LIMIT 1;`;
+    const [rows] = await connection.query(Query);
+    connection.release();
+    if (rows.length === 0) return 'normal';
+    else {
+        return rows[0].isDeleted;
+    }
+}
+
+exports.getQuestionIdFromAnswer = async (idx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `SELECT questionId FROM board_answer WHERE id = ${idx};`;
+    const [rows] = await connection.query(Query);
+    connection.release();
+    return rows[0].questionId;
+}
+
+exports.updateQuestionStatus = async (idx) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const Query = `UPDATE board_question SET status = 'normal' WHERE id = ${idx};`;
+    const [rows] = await connection.query(Query);
+    connection.release();
+    console.log('rows >', rows);
+    return;
 }
